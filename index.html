@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Beranda - TheraLog</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body class="bg-light">
+    <div id="app-container">
+        
+        <div class="text-white pt-4 pb-4 px-3 rounded-bottom-4" style="background: linear-gradient(135deg, #005a70 0%, #0087a3 100%);">
+            <div class="d-flex justify-content-between align-items-center">
+                <div>
+                    <p class="mb-0 text-white-50" style="font-size:0.7rem;">Selamat datang,</p>
+                    <h5 class="fw-bold mb-0">Dr. Sarah Wijaya</h5>
+                </div>
+                <div class="bg-white rounded-circle d-flex align-items-center justify-content-center shadow-sm" style="width: 35px; height: 35px;">
+                    <i class="bi bi-person-fill fs-5" style="color: #005a70;"></i>
+                </div>
+            </div>
+        </div>
+
+        <section class="pb-5 pt-2">
+            <div class="container-fluid px-3" style="margin-top: -20px;">
+                
+                <!-- Summary Card Utama -->
+                <div class="card border-0 shadow-sm rounded-3 mb-2">
+                    <div class="card-body p-2 px-3">
+                        <div class="d-flex justify-content-between align-items-center mb-1">
+                            <span id="periodeText" class="text-muted fw-bold" style="font-size:0.7rem;">Total Sesi</span>
+                            <i class="bi bi-calendar2-week" style="color: #f78c22; font-size:0.8rem;"></i>
+                        </div>
+                        <h4 class="fw-bold mb-0" style="color: #005a70;">24 Sesi</h4>
+                        <p class="mb-0 text-success" style="font-size:0.65rem;"><i class="bi bi-arrow-up-short"></i> +12% dari bulan lalu</p>
+                    </div>
+                </div>
+
+                <!-- Distribusi Terapi -->
+                <div class="card border-0 shadow-sm rounded-3 mb-3 mt-2">
+                    <div class="card-body p-2 px-3">
+                        <span class="fw-bold text-dark mb-2 d-block" style="font-size:0.75rem;">Distribusi Terapi</span>
+                        <div class="mb-2">
+                            <div class="d-flex justify-content-between small mb-1" style="font-size:0.65rem;">
+                                <span class="text-muted">Terapi Wicara</span>
+                                <span class="fw-bold text-dark">50%</span>
+                            </div>
+                            <div class="progress rounded-pill bg-light" style="height: 6px;">
+                                <div class="progress-bar rounded-pill" style="width: 50%; background-color: #005a70;"></div>
+                            </div>
+                        </div>
+                        <div class="mb-2">
+                            <div class="d-flex justify-content-between small mb-1" style="font-size:0.65rem;">
+                                <span class="text-muted">Fisioterapi</span>
+                                <span class="fw-bold text-dark">30%</span>
+                            </div>
+                            <div class="progress rounded-pill bg-light" style="height: 6px;">
+                                <div class="progress-bar rounded-pill" style="width: 30%; background-color: #f78c22;"></div>
+                            </div>
+                        </div>
+                        <div class="mb-2">
+                            <div class="d-flex justify-content-between small mb-1" style="font-size:0.65rem;">
+                                <span class="text-muted">Terapi Okupasi</span>
+                                <span class="fw-bold text-dark">20%</span>
+                            </div>
+                            <div class="progress rounded-pill bg-light" style="height: 6px;">
+                                <div class="progress-bar rounded-pill" style="width: 20%; background-color: var(--wondr-cyan);"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tombol Input Log -->
+                <a href="input.html" class="btn w-100 rounded-3 py-2 fw-bold text-white shadow-sm mb-3 text-decoration-none d-flex justify-content-center align-items-center" style="background-color: #f78c22; font-size: 0.8rem;">
+                    <i class="bi bi-pencil-square me-2 fs-6"></i> Input Log Baru
+                </a>
+
+                <!-- Riwayat / Log Terakhir -->
+                <div class="d-flex justify-content-between align-items-center mb-2">
+                    <span class="fw-bold text-dark mb-0" style="font-size:0.8rem;">Log Terakhir</span>
+                    <a href="riwayat.html" class="fw-bold text-decoration-none" style="color: #005a70; font-size: 0.65rem;">Lihat Semua</a>
+                </div>
+                
+                <div class="card border-0 shadow-sm rounded-3 mb-5">
+                    <div class="list-group list-group-flush rounded-3">
+                        <div class="list-group-item p-2 px-3 d-flex justify-content-between align-items-center">
+                            <div class="d-flex align-items-center">
+                                <div class="bg-light rounded p-1 me-2 text-center" style="width: 35px; height: 35px;">
+                                    <span class="fw-bold d-block" style="font-size: 0.65rem; color: #005a70; line-height: 1;">13</span>
+                                    <span class="d-block text-muted" style="font-size: 0.55rem;">Jul</span>
+                                </div>
+                                <div>
+                                    <div class="mb-0 fw-bold text-dark" style="font-size:0.75rem;">Terapi Wicara</div>
+                                    <div class="text-muted" style="font-size: 0.65rem;">Klien: Budi • 45 Mnt</div>
+                                </div>
+                            </div>
+                            <i class="bi bi-check-circle-fill text-success" style="font-size:0.8rem;"></i>
+                        </div>
+                        <div class="list-group-item p-2 px-3 d-flex justify-content-between align-items-center">
+                            <div class="d-flex align-items-center">
+                                <div class="bg-light rounded p-1 me-2 text-center" style="width: 35px; height: 35px;">
+                                    <span class="fw-bold d-block" style="font-size: 0.65rem; color: #005a70; line-height: 1;">11</span>
+                                    <span class="d-block text-muted" style="font-size: 0.55rem;">Jul</span>
+                                </div>
+                                <div>
+                                    <div class="mb-0 fw-bold text-dark" style="font-size:0.75rem;">Fisioterapi</div>
+                                    <div class="text-muted" style="font-size: 0.65rem;">Klien: Ani • 60 Mnt</div>
+                                </div>
+                            </div>
+                            <i class="bi bi-check-circle-fill text-success" style="font-size:0.8rem;"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Navigasi Bawah -->
+        <nav id="bottom-nav" class="navbar fixed-bottom bg-white shadow-lg rounded-top-3">
+            <div class="container-fluid justify-content-around px-2">
+                <a href="index.html" class="nav-item text-decoration-none active">
+                    <i class="bi bi-house-door-fill fs-5 d-block text-center"></i>
+                    <span class="nav-label">Beranda</span>
+                </a>
+                <a href="riwayat.html" class="nav-item text-decoration-none text-muted">
+                    <i class="bi bi-clock-history fs-5 d-block text-center"></i>
+                    <span class="nav-label">Riwayat</span>
+                </a>
+                <a href="recap.html" class="nav-item text-decoration-none text-muted">
+                    <i class="bi bi-pie-chart-fill fs-5 d-block text-center"></i>
+                    <span class="nav-label">Rekap</span>
+                </a>
+                <a href="pengaturan.html" class="nav-item text-decoration-none text-muted">
+                    <i class="bi bi-gear-fill fs-5 d-block text-center"></i>
+                    <span class="nav-label">Pengaturan</span>
+                </a>
+            </div>
+        </nav>
+
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            // Logika Otomatis Periode Tutup Buku (Tgl 19 s/d 18)
+            const monthNames = ["Jan", "Feb", "Mar", "Apr", "Mei", "Jun", "Jul", "Ags", "Sep", "Okt", "Nov", "Des"];
+            const today = new Date();
+            const day = today.getDate();
+            
+            let startMonth = today.getMonth();
+            let startYear = today.getFullYear();
+            let endMonth = today.getMonth();
+            let endYear = today.getFullYear();
+
+            if (day <= 18) {
+                startMonth -= 1;
+                if (startMonth < 0) {
+                    startMonth = 11;
+                    startYear -= 1;
+                }
+            } else {
+                endMonth += 1;
+                if (endMonth > 11) {
+                    endMonth = 0;
+                    endYear += 1;
+                }
+            }
+
+            let periodeStr = "";
+            if (startYear === endYear) {
+                periodeStr = `Total Sesi (19 ${monthNames[startMonth]} - 18 ${monthNames[endMonth]} ${endYear})`;
+            } else {
+                periodeStr = `Total Sesi (19 ${monthNames[startMonth]} ${startYear} - 18 ${monthNames[endMonth]} ${endYear})`;
+            }
+            document.getElementById('periodeText').innerText = periodeStr;
+        });
+    </script>
+</body>
+</html>

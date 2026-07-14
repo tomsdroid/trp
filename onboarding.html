@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Selamat Datang - TheraLog</title>
+    <!-- Swiper CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css"/>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <style>
+        body { background-color: #fff; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif; }
+        #app-container { max-width: 414px; min-height: 100vh; margin: 0 auto; background-color: #fff; position: relative; }
+        
+        .swiper { width: 100%; height: 100vh; }
+        .swiper-slide { 
+            display: flex; flex-direction: column; justify-content: center; align-items: center; 
+            padding: 40px; text-align: center;
+        }
+
+        /* Footer Nav */
+        .footer-nav {
+            position: fixed; bottom: 0; width: 100%; max-width: 414px;
+            padding: 20px; background-color: #fff; z-index: 10;
+        }
+        .btn-full { 
+            width: 100%; height: 55px; display: flex; align-items: center; justify-content: center;
+            font-weight: bold; border-radius: 50px; border: none; transition: all 0.2s; text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+    <div id="app-container">
+        
+        <div class="swiper mySwiper">
+            <div class="swiper-wrapper">
+                <!-- Slide 1 -->
+                <div class="swiper-slide">
+                    <i class="bi bi-journal-check" style="font-size: 6rem; color: #005a70;"></i>
+                    <h4 class="fw-bold text-dark mt-4">Catat Sesi Terapi</h4>
+                    <p class="text-muted mt-2">Mudah mencatat setiap sesi terapi klien Anda dengan sistem yang terintegrasi.</p>
+                </div>
+                <!-- Slide 2 -->
+                <div class="swiper-slide">
+                    <i class="bi bi-pie-chart-fill" style="font-size: 6rem; color: #f78c22;"></i>
+                    <h4 class="fw-bold text-dark mt-4">Pantau Statistik</h4>
+                    <p class="text-muted mt-2">Lihat progres bulanan dan distribusi layanan Anda secara real-time.</p>
+                </div>
+                <!-- Slide 3 -->
+                <div class="swiper-slide">
+                    <i class="bi bi-shield-lock-fill" style="font-size: 6rem; color: #76ded4;"></i>
+                    <h4 class="fw-bold text-dark mt-4">Data Aman</h4>
+                    <p class="text-muted mt-2">Keamanan adalah prioritas dengan sistem login biometrik untuk akun Anda.</p>
+                </div>
+            </div>
+            <!-- Pagination -->
+            <div class="swiper-pagination mb-5"></div>
+        </div>
+
+        <!-- Tombol Navigasi -->
+        <div class="footer-nav">
+            <button id="btnNext" class="btn-full text-white" style="background-color: #005a70;">
+                Selanjutnya
+            </button>
+            <a href="index.html" id="btnStart" class="btn-full text-white" style="background-color: #f78c22; display: none;" onclick="localStorage.setItem('onboarding_done', 'true')">
+                Mulai Sekarang
+            </a>
+        </div>
+    </div>
+
+    <!-- Swiper JS -->
+    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+    <script>
+        const swiper = new Swiper(".mySwiper", {
+            pagination: { el: ".swiper-pagination", clickable: true },
+        });
+
+        const btnNext = document.getElementById('btnNext');
+        const btnStart = document.getElementById('btnStart');
+
+        // Navigasi Tombol Next
+        btnNext.addEventListener('click', () => {
+            swiper.slideNext();
+        });
+
+        // Event saat slide berpindah
+        swiper.on('slideChange', function () {
+            if (swiper.isEnd) {
+                btnNext.style.display = 'none';
+                btnStart.style.display = 'flex';
+            } else {
+                btnNext.style.display = 'flex';
+                btnStart.style.display = 'none';
+            }
+        });
+    </script>
+</body>
+</html>
