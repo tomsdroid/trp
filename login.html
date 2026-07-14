@@ -14,7 +14,7 @@
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
-    <link rel="icon" type="image/png" href="favicon-96x96.png">
+    <link rel="icon" type="image/png" href="./favicon-96x96.png">
     <style>
         :root { --wondr-blue: #005a70; --wondr-cyan: #76ded4; }
         body { background: linear-gradient(135deg, #f0f7f9 0%, #e0eaf1 100%); min-height: 100vh; }
@@ -62,7 +62,7 @@
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="js/db.js"></script>
+    <script src="./js/db.js"></script>
     <script>
         let currentUserData = null;
 
@@ -81,13 +81,13 @@
             const userId = localStorage.getItem('current_user_id');
             const isLoggedIn = localStorage.getItem('is_logged_in');
 
-            if(!userId){ window.location.href = 'onboarding.html'; return; }
-            if(isLoggedIn === 'true'){ window.location.href = 'index.html'; return; }
+            if(!userId){ window.location.href = './onboarding.html'; return; }
+            if(isLoggedIn === 'true'){ window.location.href = './index.html'; return; }
 
             try {
                 await initDB(); 
                 currentUserData = await getTherapist(userId);
-                if(!currentUserData){ alert("Data user tidak ditemukan"); localStorage.clear(); window.location.href = 'onboarding.html'; return; }
+                if(!currentUserData){ alert("Data user tidak ditemukan"); localStorage.clear(); window.location.href = './onboarding.html'; return; }
 
                 document.getElementById('welcomeText').innerText = `Halo, ${currentUserData.fullname}`;
                 document.getElementById('loadingBox').style.display = 'none';

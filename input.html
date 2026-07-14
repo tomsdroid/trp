@@ -107,7 +107,7 @@
 
     document.addEventListener("DOMContentLoaded", function() {
         const userId = localStorage.getItem('current_user_id');
-        if(!userId) { window.location.href = 'onboarding.html'; return; }
+        if(!userId) { window.location.href = './onboarding.html'; return; }
 
         const inputId = document.getElementById("inputId");
         const inputDate = document.getElementById("inputDate");

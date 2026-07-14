@@ -1,12 +1,12 @@
 const CACHE_NAME = "theralog-v1";
 const urlsToCache = [
-  "/",
-  "/login.html",
-  "/index.html",
-  "/onboarding.html",
-  "/pengaturan.html",
-  "/css/style.css",
-  "/js/db.js",
+  "./",
+  "./login.html",
+  "./index.html",
+  "./onboarding.html",
+  "./pengaturan.html",
+  "./css/style.css",
+  "./js/db.js",
   "https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css",
   "https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css",
   "https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"
