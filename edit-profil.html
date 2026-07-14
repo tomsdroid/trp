@@ -4,20 +4,23 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Edit Profil - TheraLog</title>
+    <!-- PWA -->
+    <link rel="manifest" href="manifest.json">
+    <link rel="apple-touch-icon" href="apple-touch-icon.png">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
-    <link rel="stylesheet" href="css/style.css">
+    <link rel="icon" type="image/png" href="favicon-96x96.png">
     <style>
-        .form-control[readonly] {
-            background-color: transparent !important;
-            padding-left: 0;
-        }
+  .form-control[readonly] { background-color: transparent!important; padding-left: 0; }
+  .avatar-img { width: 100%; height: 100%; object-fit: cover; border-radius: 1rem; }
+  .loading-overlay { position: fixed; top:0; left:0; right:0; bottom:0; background: rgba(0,0,0,0.5); z-index: 999; display: none; align-items: center; justify-content: center; color: white; flex-direction: column; }
     </style>
 </head>
 <body class="bg-light">
     <div id="app-container">
-        
-        <!-- Header Page -->
         <div class="bg-white pt-4 pb-3 px-3 shadow-sm d-flex align-items-center position-sticky top-0 z-3">
             <a href="pengaturan.html" class="text-dark me-2 mt-1"><i class="bi bi-arrow-left fs-5"></i></a>
             <h5 class="fw-bold mb-0" style="color: #005a70;">Edit Profil Pribadi</h5>
@@ -27,14 +30,14 @@
             <div class="container-fluid px-3">
                 <div class="card border-0 shadow-sm rounded-3 mb-3">
                     <div class="card-body p-3">
-                        
-                        <!-- BAGIAN EDIT AVATAR -->
+                        <!-- AVATAR -->
                         <div class="text-center mb-4 mt-1">
                             <div class="position-relative d-inline-block">
-                                <div class="bg-white rounded-4 d-inline-flex align-items-center justify-content-center shadow-sm" style="width: 85px; height: 85px; border: 1px solid #eee;">
-                                    <i class="bi bi-person-fill" style="font-size: 3.8rem; color: #005a70;"></i>
+                                <div class="bg-white rounded-4 d-inline-flex align-items-center justify-content-center shadow-sm" style="width: 85px; height: 85px; border: 1px solid #eee; overflow: hidden;">
+                                    <img id="avatarPreview" src="#" class="avatar-img" style="display:none;">
+                                    <i id="avatarIcon" class="bi bi-person-fill" style="font-size: 3.8rem; color: #005a70;"></i>
                                 </div>
-                                <label for="uploadAvatar" class="position-absolute bottom-0 end-0 rounded-circle border border-2 border-white d-flex align-items-center justify-content-center shadow-sm" style="width: 28px; height: 28px; background-color: var(--wondr-orange); cursor: pointer; transform: translate(25%, 25%);">
+                                <label for="uploadAvatar" class="position-absolute bottom-0 end-0 rounded-circle border-2 border-white d-flex align-items-center justify-content-center shadow-sm" style="width: 28px; height: 28px; background-color: #f78c22; cursor: pointer; transform: translate(25%, 25%);">
                                     <i class="bi bi-camera-fill text-white" style="font-size: 0.75rem;"></i>
                                 </label>
                                 <input type="file" id="uploadAvatar" class="d-none" accept="image/png, image/jpeg, image/jpg">
@@ -42,30 +45,36 @@
                             <div class="mt-2 text-muted" style="font-size: 0.65rem;">Maks. 2MB (JPG/PNG)</div>
                         </div>
 
-                        <form>
+                        <form id="editForm">
                             <div class="mb-3">
-                                <label class="form-label fw-bold text-dark mb-0" style="font-size:0.7rem;">ID Terapis (Tidak dapat diubah)</label>
-                                <input type="text" class="form-control form-control-sm border-0 fw-bold text-muted fs-6" value="TRP-9921" readonly>
+                                <label class="form-label fw-bold text-dark mb-0" style="font-size:0.7rem;">ID Terapis</label>
+                                <input type="text" id="inputID" class="form-control form-control-sm border-0 fw-bold text-muted fs-6" readonly>
                             </div>
-                            
+                             <div class="mb-3">
+                                <label class="form-label fw-bold text-dark mb-0" style="font-size:0.7rem;">Cabang - Area</label>
+                                <input type="text" id="inputDetail" class="form-control form-control-sm border-0 fw-bold text-muted fs-6" readonly>
+                            </div>
                             <hr class="text-muted opacity-25 my-2">
 
+                            <!-- URUTAN: NAMA PANGGILAN DULU -->
                             <div class="mb-3 mt-3">
+                                <label class="form-label fw-bold text-dark mb-1" style="font-size:0.75rem;">Nama Panggilan</label> <!-- UDAH DIHAPUS /SHORTNAME -->
+                                <input type="text" id="inputShortname" class="form-control form-control-sm bg-light border-0 rounded-2" required>
+                            </div>
+                            <div class="mb-3">
                                 <label class="form-label fw-bold text-dark mb-1" style="font-size:0.75rem;">Nama Lengkap</label>
-                                <input type="text" class="form-control form-control-sm bg-light border-0 rounded-2" value="Dr. Sarah Wijaya">
+                                <input type="text" id="inputFullname" class="form-control form-control-sm bg-light border-0 rounded-2" required>
                             </div>
 
                             <div class="mb-3">
                                 <label class="form-label fw-bold text-dark mb-1" style="font-size:0.75rem;">Nomor Handphone</label>
-                                <input type="tel" class="form-control form-control-sm bg-light border-0 rounded-2" value="081234567890">
+                                <input type="tel" id="inputPhone" class="form-control form-control-sm bg-light border-0 rounded-2">
                             </div>
-
                             <div class="mb-4">
                                 <label class="form-label fw-bold text-dark mb-1" style="font-size:0.75rem;">Email</label>
-                                <input type="email" class="form-control form-control-sm bg-light border-0 rounded-2" value="sarah.wijaya@theralog.com">
+                                <input type="email" id="inputEmail" class="form-control form-control-sm bg-light border-0 rounded-2">
                             </div>
-                            
-                            <button type="button" class="btn w-100 rounded-pill py-2 fw-bold text-white shadow-sm" style="background-color: #005a70; font-size: 0.8rem;" onclick="alert('Profil berhasil diperbarui!'); window.location.href='pengaturan.html';">
+                            <button type="submit" id="btnSimpan" class="btn w-100 rounded-pill py-2 fw-bold text-white shadow-sm" style="background-color: #005a70; font-size: 0.8rem;">
                                 Simpan Perubahan
                             </button>
                         </form>
@@ -74,13 +83,80 @@
             </div>
         </section>
     </div>
-    <script>
-        document.getElementById('uploadAvatar').addEventListener('change', function(event) {
-            const file = event.target.files[0];
-            if (file) {
-                alert('Foto "'+ file.name +'" siap diunggah saat Anda menyimpan perubahan.');
+    <div class="loading-overlay" id="loading"><div class="spinner-border text-white mb-2"></div><p>Menyimpan...</p></div>
+
+    <<script src="js/db.js"></script>
+<script>
+    let currentUserData = null;
+    let avatarBase64 = null; // buat nampung foto base64
+
+    document.addEventListener("DOMContentLoaded", async function() {
+        const userId = localStorage.getItem('current_user_id');
+        if(!userId){ window.location.href = 'pengaturan.html'; return; }
+        currentUserData = await getTherapist(userId);
+        if(currentUserData){
+            document.getElementById('inputID').value = currentUserData.therapist_id;
+            document.getElementById('inputDetail').value = `${currentUserData.branch} - ${currentUserData.area}`;
+            document.getElementById('inputShortname').value = currentUserData.shortname || '';
+            document.getElementById('inputFullname').value = currentUserData.fullname || '';
+            document.getElementById('inputPhone').value = currentUserData.phone || '';
+            document.getElementById('inputEmail').value = currentUserData.email || '';
+            if(currentUserData.avatarUrl){
+                document.getElementById('avatarPreview').src = currentUserData.avatarUrl;
+                document.getElementById('avatarPreview').style.display = 'block';
+                document.getElementById('avatarIcon').style.display = 'none';
+                avatarBase64 = currentUserData.avatarUrl; // simpan yg lama juga
             }
-        });
-    </script>
+        }
+    });
+
+    // 1. PAS PILIH FOTO LANGSUNG CONVERT KE BASE64
+    document.getElementById('uploadAvatar').addEventListener('change', function(event) {
+        const file = event.target.files[0];
+        if (!file) return;
+        if(file.size > 2 * 1024 * 1024){ alert("Ukuran file maksimal 2MB"); this.value = ""; return; }
+
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            avatarBase64 = e.target.result; // simpan base64 nya
+            document.getElementById('avatarPreview').src = avatarBase64;
+            document.getElementById('avatarPreview').style.display = 'block';
+            document.getElementById('avatarIcon').style.display = 'none';
+        }
+        reader.readAsDataURL(file);
+    });
+
+    // 2. PAS SIMPAN LANGSUNG KE INDEXEDDB
+    document.getElementById('editForm').addEventListener('submit', async function(e){
+        e.preventDefault();
+        const btn = document.getElementById('btnSimpan');
+        btn.disabled = true; document.getElementById('loading').style.display = 'flex';
+        document.querySelector('#loading p').innerText = 'Menyimpan...';
+
+        try {
+            // GABUNGKAN SEMUA DATA + AVATAR BARU
+            const updatedData = {
+              ...currentUserData,
+                shortname: document.getElementById('inputShortname').value,
+                fullname: document.getElementById('inputFullname').value,
+                phone: document.getElementById('inputPhone').value,
+                email: document.getElementById('inputEmail').value,
+                avatarUrl: avatarBase64, // INI KUNCINYA: SIMPAN BASE64 LANGSUNG
+                updated_at: new Date().toISOString(),
+                _isDirty: true // Tandai biar nanti di-sync ke server
+            };
+
+            await saveTherapist(updatedData); // SIMPAN KE INDEXEDDB INSTAN
+
+            alert('Profil berhasil diperbarui!');
+            window.location.href = 'pengaturan.html';
+
+        } catch (err) {
+            console.error(err); alert('Gagal menyimpan: ' + err);
+        } finally {
+            btn.disabled = false; document.getElementById('loading').style.display = 'none';
+        }
+    });
+</script>
 </body>
 </html>

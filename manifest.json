@@ -1,0 +1,25 @@
+{
+  "name": "TheraLog - Catat Sesi Terapi",
+  "short_name": "TheraLog",
+  "description": "Aplikasi pencatatan sesi terapi offline untuk terapis",
+  "start_url": "index.html",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#005a70",
+  "theme_color": "#005a70",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "icons/web-app-manifest-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "maskable"
+    },
+    {
+      "src": "icons/web-app-manifest-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ]
+}

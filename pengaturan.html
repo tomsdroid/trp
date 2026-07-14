@@ -4,32 +4,29 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Pengaturan - TheraLog</title>
+    <!-- PWA -->
+    <link rel="manifest" href="manifest.json">
+    <link rel="apple-touch-icon" href="apple-touch-icon.png">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
-    <link rel="stylesheet" href="css/style.css">
+    <link rel="icon" type="image/png" href="favicon-96x96.png">
     <style>
-        /* Animasi Custom Popup (Muncul & Tutup) */
-        .animation-scale-up {
-            animation: scaleUp 0.2s ease-out forwards;
-        }
-        @keyframes scaleUp {
-            from { transform: scale(0.8); opacity: 0; }
-            to { transform: scale(1); opacity: 1; }
-        }
-
-        .animation-scale-down {
-            animation: scaleDown 0.2s ease-in forwards;
-        }
-        @keyframes scaleDown {
-            from { transform: scale(1); opacity: 1; }
-            to { transform: scale(0.8); opacity: 0; }
-        }
+        .animation-scale-up { animation: scaleUp 0.2s ease-out forwards; }
+        @keyframes scaleUp { from { transform: scale(0.8); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+        .animation-scale-down { animation: scaleDown 0.2s ease-in forwards; }
+        @keyframes scaleDown { from { transform: scale(1); opacity: 1; } to { transform: scale(0.8); opacity: 0; } }
+        .avatar-img { width: 100%; height: 100%; object-fit: cover; border-radius: 1rem; }
+        #bottom-nav .nav-item { font-size: 0.65rem; text-align: center; padding: 8px 0; }
+        #bottom-nav .nav-item.active { color: #005a70 !important; }
+        #bottom-nav .nav-item { color: #6c757d !important; }
     </style>
 </head>
 <body class="bg-light">
     <div id="app-container">
         
-        <!-- Header -->
         <div class="bg-white pt-4 pb-3 px-3 shadow-sm mb-2 position-sticky top-0 z-3">
             <h5 class="fw-bold mb-0" style="color: #005a70;">Pengaturan</h5>
         </div>
@@ -37,12 +34,15 @@
         <section class="pb-5 pt-2">
             <!-- Profil Singkat -->
             <div class="container-fluid px-3 text-center mt-2 mb-4">
-                <div onclick="showAvatarZoom()" class="bg-white rounded-4 d-inline-flex align-items-center justify-content-center shadow-sm mb-2" style="width: 80px; height: 80px; cursor: pointer; border: 1px solid #eee;">
-                    <i class="bi bi-person-fill" style="font-size: 3.5rem; color: #005a70;"></i>
+                <div onclick="showAvatarZoom()" class="bg-white rounded-4 d-inline-flex align-items-center justify-content-center shadow-sm mb-2" style="width: 80px; height: 80px; cursor: pointer; border: 1px solid #eee; overflow: hidden;">
+                    <!-- ID BUAT JS -->
+                    <img id="avatarPreview" src="#" class="avatar-img" style="display:none;">
+                    <i id="avatarIcon" class="bi bi-person-fill" style="font-size: 3.5rem; color: #005a70;"></i>
                 </div>
-                <h6 class="fw-bold text-dark mb-0">Dr. Sarah Wijaya</h6>
-                <p class="text-muted mb-0" style="font-size: 0.75rem;">Terapis Cabang Amarta</p>
-                <p class="fw-bold mt-1" style="color: #f78c22; font-size: 0.7rem;">ID: TRP-9921</p>
+                <!-- ID BUAT JS -->
+                <h6 id="profileNama" class="fw-bold text-dark mb-0">Memuat...</h6>
+                <p id="profileCabang" class="text-muted mb-0" style="font-size: 0.75rem;">Memuat...</p>
+                <p id="profileID" class="fw-bold mt-1" style="color: #f78c22; font-size: 0.7rem;">ID: -</p>
             </div>
 
             <!-- Menu Pengaturan -->
@@ -51,29 +51,17 @@
                 <div class="card border-0 shadow-sm rounded-3 mb-4">
                     <div class="list-group list-group-flush rounded-3">
                         <a href="edit-profil.html" class="list-group-item p-3 d-flex align-items-center text-dark text-decoration-none">
-                            <div class="bg-light rounded p-2 me-3 d-flex align-items-center justify-content-center" style="width: 32px; height: 32px;">
-                                <i class="bi bi-person-gear text-dark"></i>
-                            </div>
-                            <span class="fw-bold flex-grow-1" style="font-size: 0.75rem;">Edit Profil Pribadi</span>
-                            <i class="bi bi-chevron-right text-muted" style="font-size: 0.8rem;"></i>
+                            <div class="bg-light rounded p-2 me-3 d-flex align-items-center justify-content-center" style="width: 32px; height: 32px;"><i class="bi bi-person-gear text-dark"></i></div>
+                            <span class="fw-bold flex-grow-1" style="font-size: 0.75rem;">Edit Profil Pribadi</span><i class="bi bi-chevron-right text-muted" style="font-size: 0.8rem;"></i>
                         </a>
                         <a href="ubah-pin.html" class="list-group-item p-3 d-flex align-items-center text-dark text-decoration-none">
-                            <div class="bg-light rounded p-2 me-3 d-flex align-items-center justify-content-center" style="width: 32px; height: 32px;">
-                                <i class="bi bi-shield-lock text-dark"></i>
-                            </div>
-                            <span class="fw-bold flex-grow-1" style="font-size: 0.75rem;">Ubah PIN / Password</span>
-                            <i class="bi bi-chevron-right text-muted" style="font-size: 0.8rem;"></i>
+                            <div class="bg-light rounded p-2 me-3 d-flex align-items-center justify-content-center" style="width: 32px; height: 32px;"><i class="bi bi-shield-lock text-dark"></i></div>
+                            <span class="fw-bold flex-grow-1" style="font-size: 0.75rem;">Ubah PIN / Password</span><i class="bi bi-chevron-right text-muted" style="font-size: 0.8rem;"></i>
                         </a>
-                        
-                        <!-- Login Biometrik -->
                         <div class="list-group-item p-3 d-flex align-items-center text-dark">
-                            <div class="bg-light rounded p-2 me-3 d-flex align-items-center justify-content-center" style="width: 32px; height: 32px;">
-                                <i class="bi bi-fingerprint text-dark fs-5"></i>
-                            </div>
+                            <div class="bg-light rounded p-2 me-3 d-flex align-items-center justify-content-center" style="width: 32px; height: 32px;"><i class="bi bi-fingerprint text-dark fs-5"></i></div>
                             <span class="fw-bold flex-grow-1" style="font-size: 0.75rem;">Login Sidik Jari / Face ID</span>
-                            <div class="form-check form-switch mb-0">
-                                <input class="form-check-input fs-5 m-0" type="checkbox" id="switchBiometric">
-                            </div>
+                            <div class="form-check form-switch mb-0"><input class="form-check-input fs-5 m-0" type="checkbox" id="switchBiometric"></div>
                         </div>
                     </div>
                 </div>
@@ -82,11 +70,9 @@
                 <div class="card border-0 shadow-sm rounded-3 mb-4">
                     <div class="list-group list-group-flush rounded-3">
                         <a href="#" class="list-group-item p-3 d-flex align-items-center text-dark text-decoration-none">
-                            <div class="bg-light rounded p-2 me-3 d-flex align-items-center justify-content-center" style="width: 32px; height: 32px;">
-                                <i class="bi bi-cloud-arrow-up text-dark"></i>
-                            </div>
+                            <div class="bg-light rounded p-2 me-3 d-flex align-items-center justify-content-center" style="width: 32px; height: 32px;"><i class="bi bi-cloud-arrow-up text-dark"></i></div>
                             <span class="fw-bold flex-grow-1" style="font-size: 0.75rem;">Sinkronisasi Data</span>
-                            <span class="badge rounded-pill fw-normal me-2" style="background-color: var(--wondr-cyan); color: #005a70; font-size: 0.65rem;">Otomatis</span>
+                            <span class="badge rounded-pill fw-normal me-2" style="background-color: #76ded4; color: #005a70; font-size: 0.65rem;">Otomatis</span>
                         </a>
                     </div>
                 </div>
@@ -100,47 +86,32 @@
         <!-- Navigasi Bawah -->
         <nav id="bottom-nav" class="navbar fixed-bottom bg-white shadow-lg rounded-top-3">
             <div class="container-fluid justify-content-around px-2">
-                <a href="index.html" class="nav-item text-decoration-none text-muted">
-                    <i class="bi bi-house-door-fill fs-5 d-block text-center"></i>
-                    <span class="nav-label">Beranda</span>
-                </a>
-                <a href="riwayat.html" class="nav-item text-decoration-none text-muted">
-                    <i class="bi bi-clock-history fs-5 d-block text-center"></i>
-                    <span class="nav-label">Riwayat</span>
-                </a>
-                <a href="recap.html" class="nav-item text-decoration-none text-muted">
-                    <i class="bi bi-pie-chart-fill fs-5 d-block text-center"></i>
-                    <span class="nav-label">Rekap</span>
-                </a>
-                <a href="pengaturan.html" class="nav-item text-decoration-none active">
-                    <i class="bi bi-gear-fill fs-5 d-block text-center"></i>
-                    <span class="nav-label">Pengaturan</span>
-                </a>
+                <a href="index.html" class="nav-item text-decoration-none text-muted"><i class="bi bi-house-door-fill fs-5 d-block text-center"></i><span class="nav-label">Beranda</span></a>
+                <a href="riwayat.html" class="nav-item text-decoration-none text-muted"><i class="bi bi-clock-history fs-5 d-block text-center"></i><span class="nav-label">Riwayat</span></a>
+                <a href="recap.html" class="nav-item text-decoration-none text-muted"><i class="bi bi-pie-chart-fill fs-5 d-block text-center"></i><span class="nav-label">Rekap</span></a>
+                <a href="pengaturan.html" class="nav-item text-decoration-none active"><i class="bi bi-gear-fill fs-5 d-block text-center"></i><span class="nav-label">Pengaturan</span></a>
             </div>
         </nav>
 
-        <!-- ================= CUSTOM POPUP / ALERT OVERLAY ================= -->
+        <!-- POPUP -->
         <div id="customPopup" class="position-absolute top-0 start-0 w-100 h-100 bg-dark bg-opacity-50 d-none z-3 flex-column justify-content-center align-items-center px-4" style="backdrop-filter: blur(2px);">
             <div id="popupContent" class="bg-white w-100 rounded-4 p-4 text-center shadow animation-scale-up">
-                <div class="mb-3 d-inline-flex align-items-center justify-content-center rounded-4" style="width: 60px; height: 60px; background-color: #f8f9fa;">
-                    <i id="popupIcon" class="bi bi-fingerprint" style="font-size: 2.2rem; color: #005a70;"></i>
-                </div>
+                <div class="mb-3 d-inline-flex align-items-center justify-content-center rounded-4" style="width: 60px; height: 60px; background-color: #f8f9fa;"><i id="popupIcon" class="bi bi-fingerprint" style="font-size: 2.2rem; color: #005a70;"></i></div>
                 <h6 id="popupTitle" class="fw-bold text-dark mb-2">Verifikasi Biometrik</h6>
-                <p id="popupMessage" class="text-muted mb-4" style="font-size: 0.75rem; line-height: 1.5;">
-                    Silakan sentuh sensor sidik jari Anda.
-                </p>
+                <p id="popupMessage" class="text-muted mb-4" style="font-size: 0.75rem; line-height: 1.5;">Silakan sentuh sensor sidik jari Anda.</p>
                 <button type="button" id="popupBtn" class="btn w-100 rounded-pill py-2 fw-bold text-white shadow-sm" style="background-color: #f78c22; font-size: 0.8rem;" onclick="closePopup()">Batal</button>
             </div>
         </div>
 
-        <!-- ================= AVATAR ZOOM MODAL ================= -->
+        <!-- AVATAR ZOOM MODAL -->
         <div id="avatarModal" class="position-absolute top-0 start-0 w-100 h-100 bg-dark bg-opacity-75 d-none z-3 flex-column justify-content-center align-items-center" style="backdrop-filter: blur(3px);" onclick="closeAvatarZoom()">
             <div id="avatarContent" class="animation-scale-up text-center">
-                <!-- Foto Zoom Box 1:1 -->
-                <div class="bg-white rounded-4 d-inline-flex align-items-center justify-content-center shadow-lg" style="width: 250px; height: 250px;">
-                    <i class="bi bi-person-fill" style="font-size: 10rem; color: #005a70;"></i>
+                <div class="bg-white rounded-4 d-inline-flex align-items-center justify-content-center shadow-lg" style="width: 250px; height: 250px; overflow: hidden;">
+                    <!-- ID BUAT JS -->
+                    <img id="avatarZoom" src="#" class="avatar-img" style="display:none;">
+                    <i id="avatarIconZoom" class="bi bi-person-fill" style="font-size: 10rem; color: #005a70;"></i>
                 </div>
-                <h5 class="text-white mt-4 fw-bold">Dr. Sarah Wijaya</h5>
+                <h5 id="zoomNama" class="text-white mt-4 fw-bold">-</h5>
                 <p class="text-white-50 small">Ketuk di mana saja untuk menutup</p>
             </div>
         </div>
@@ -148,97 +119,94 @@
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="js/db.js"></script>
     <script>
-        // ======= Logika Custom Popup Alert =======
-        function showPopup(title, message, iconClass, iconColor, btnText, btnBgColor, isCancelAction = false) {
-            document.getElementById('popupTitle').innerText = title;
-            document.getElementById('popupMessage').innerText = message;
-            
-            const icon = document.getElementById('popupIcon');
-            icon.className = `bi ${iconClass}`;
-            icon.style.color = iconColor;
-            
-            const btn = document.getElementById('popupBtn');
-            btn.innerText = btnText;
-            btn.style.backgroundColor = btnBgColor;
-            
-            if(isCancelAction) {
-                btn.onclick = function() {
-                    document.getElementById('switchBiometric').checked = false;
-                    closePopup();
-                };
-            } else {
-                btn.onclick = closePopup;
-            }
+        let currentUserData = null;
 
-            const overlay = document.getElementById('customPopup');
-            const content = document.getElementById('popupContent');
-            
-            // Reset class animasi
-            content.classList.remove('animation-scale-down');
-            content.classList.add('animation-scale-up');
-            
-            overlay.classList.remove('d-none');
-            overlay.classList.add('d-flex');
-        }
+        // AMBIL DATA DARI INDEXEDDB SAAT HALAMAN LOAD
+        document.addEventListener("DOMContentLoaded", async function() {
+            const userId = localStorage.getItem('current_user_id');
+            if(!userId){ window.location.href = 'index.html'; return; }
 
-        function closePopup() {
-            const overlay = document.getElementById('customPopup');
-            const content = document.getElementById('popupContent');
-            
-            // Putar animasi scale-down
-            content.classList.remove('animation-scale-up');
-            content.classList.add('animation-scale-down');
-            
-            // Tunggu animasi selesai (200ms) sebelum menghilangkan elemen
-            setTimeout(() => {
-                overlay.classList.remove('d-flex');
-                overlay.classList.add('d-none');
-            }, 200);
-        }
+            try {
+                currentUserData = await getTherapist(userId);
 
-        function showLogoutAlert() {
-            showPopup('Keluar Aplikasi', 'Apakah Anda yakin ingin keluar dari akun TheraLog?', 'bi-box-arrow-right', '#dc3545', 'Batal', '#005a70');
-        }
+                if(currentUserData){
+                    // ISI DATA PROFIL
+                    document.getElementById('profileNama').innerText = currentUserData.fullname;
+                    document.getElementById('profileCabang').innerText = `Terapis ${currentUserData.branch} ${currentUserData.area}`; // UDAH DI FIX
+                    document.getElementById('profileID').innerText = `ID: ${currentUserData.therapist_id}`;
+                    document.getElementById('zoomNama').innerText = currentUserData.fullname;
 
-        // ======= Interaksi Switch Biometrik =======
-        document.addEventListener("DOMContentLoaded", function() {
+                    // ISI AVATAR
+                    const avatarSrc = currentUserData.avatarUrl || currentUserData.avatar;
+                    if(avatarSrc){
+                        document.getElementById('avatarPreview').src = avatarSrc;
+                        document.getElementById('avatarPreview').style.display = 'block';
+                        document.getElementById('avatarIcon').style.display = 'none';
+
+                        document.getElementById('avatarZoom').src = avatarSrc;
+                        document.getElementById('avatarZoom').style.display = 'block';
+                        document.getElementById('avatarIconZoom').style.display = 'none';
+                    }
+                } else {
+                    alert("Data user tidak ditemukan");
+                }
+            } catch(err){ console.error(err); }
+
+            // BIOMETRIK
             const biometricSwitch = document.getElementById('switchBiometric');
+            const bioStatus = localStorage.getItem(`bio_${userId}`);
+            if(bioStatus === 'true') biometricSwitch.checked = true;
+
             biometricSwitch.addEventListener('change', function() {
                 if (this.checked) {
-                    showPopup('Aktifkan Biometrik', 'Gunakan sensor sidik jari atau Face ID Anda untuk melakukan otorisasi login cepat.', 'bi-fingerprint', '#005a70', 'Batal', '#f78c22', true);
+                    showPopup('Aktifkan Biometrik', 'Gunakan sensor sidik jari atau Face ID Anda untuk login cepat.', 'bi-fingerprint', '#005a70', 'Batal', '#f78c22', true);
+                    localStorage.setItem(`bio_${userId}`, 'true');
                 } else {
                     showPopup('Biometrik Dinonaktifkan', 'Fitur login menggunakan sidik jari atau Face ID telah dimatikan.', 'bi-shield-lock-fill', '#6c757d', 'Tutup', '#005a70');
+                    localStorage.setItem(`bio_${userId}`, 'false');
                 }
             });
         });
 
-        // ======= Logika Zoom Foto Profil =======
-        function showAvatarZoom() {
-            const modal = document.getElementById('avatarModal');
-            const content = document.getElementById('avatarContent');
-            
-            // Reset class animasi
-            content.classList.remove('animation-scale-down');
-            content.classList.add('animation-scale-up');
-            
-            modal.classList.remove('d-none');
-            modal.classList.add('d-flex');
+        // LOGOUT
+        function showLogoutAlert() {
+            showPopup('Keluar Aplikasi', 'Apakah Anda yakin ingin keluar dari akun TheraLog?', 'bi-box-arrow-right', '#dc3545', 'Ya, Keluar', '#dc3545');
+            document.getElementById('popupBtn').onclick = () => {
+                localStorage.setItem('is_logged_in', 'false'); 
+                // localStorage.removeItem('is_logged_in');
+                // localStorage.removeItem('current_user_id');
+                window.location.href = 'login.html';
+            }
         }
-        
+
+        // POPUP & AVATAR ZOOM
+        function showPopup(title, message, iconClass, iconColor, btnText, btnBgColor, isCancelAction = false) {
+            document.getElementById('popupTitle').innerText = title;
+            document.getElementById('popupMessage').innerText = message;
+            const icon = document.getElementById('popupIcon'); icon.className = `bi ${iconClass}`; icon.style.color = iconColor;
+            const btn = document.getElementById('popupBtn'); btn.innerText = btnText; btn.style.backgroundColor = btnBgColor;
+            if(isCancelAction) { btn.onclick = function() { document.getElementById('switchBiometric').checked = false; localStorage.setItem(`bio_${localStorage.getItem('current_user_id')}`, 'false'); closePopup(); }; } 
+            else { btn.onclick = closePopup; }
+            const overlay = document.getElementById('customPopup'); const content = document.getElementById('popupContent');
+            content.classList.remove('animation-scale-down'); content.classList.add('animation-scale-up');
+            overlay.classList.remove('d-none'); overlay.classList.add('d-flex');
+        }
+        function closePopup() {
+            const overlay = document.getElementById('customPopup'); const content = document.getElementById('popupContent');
+            content.classList.remove('animation-scale-up'); content.classList.add('animation-scale-down');
+            setTimeout(() => { overlay.classList.remove('d-flex'); overlay.classList.add('d-none'); }, 200);
+        }
+        function showAvatarZoom() {
+            const modal = document.getElementById('avatarModal'); const content = document.getElementById('avatarContent');
+            content.classList.remove('animation-scale-down'); content.classList.add('animation-scale-up');
+            modal.classList.remove('d-none'); modal.classList.add('d-flex');
+        }
         function closeAvatarZoom() {
-            const modal = document.getElementById('avatarModal');
-            const content = document.getElementById('avatarContent');
-            
-            // Putar animasi scale-down
-            content.classList.remove('animation-scale-up');
-            content.classList.add('animation-scale-down');
-            
-            // Tunggu animasi selesai (200ms) sebelum menghilangkan elemen
-            setTimeout(() => {
-                modal.classList.remove('d-flex');
-                modal.classList.add('d-none');
-            }, 200);
+            const modal = document.getElementById('avatarModal'); const content = document.getElementById('avatarContent');
+            content.classList.remove('animation-scale-up'); content.classList.add('animation-scale-down');
+            setTimeout(() => { modal.classList.remove('d-flex'); modal.classList.add('d-none'); }, 200);
         }
     </script>
 </body>

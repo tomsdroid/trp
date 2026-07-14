@@ -4,13 +4,33 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Rekap - TheraLog</title>
+    <!-- PWA -->
+    <link rel="manifest" href="manifest.json">
+    <link rel="apple-touch-icon" href="apple-touch-icon.png">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
-    <link rel="stylesheet" href="css/style.css">
+    <link rel="icon" type="image/png" href="favicon-96x96.png">
+    <style>
+        #bottom-nav.nav-item { font-size: 0.65rem; text-align: center; padding: 8px 0; }
+        #bottom-nav.nav-item.active { color: #005a70!important; }
+        #bottom-nav.nav-item { color: #6c757d!important; }
+      .loading-overlay { position: fixed; top:0; left:0; right:0; bottom:0; background: rgba(0,0,0,0.5); z-index: 999; display: none; align-items: center; justify-content: center; color: white; flex-direction: column; }
+
+      .filter-sheet { position: fixed; bottom: -100%; left: 0; right: 0; background: white; border-radius: 20px 20px 0 0; box-shadow: 0 -5px 20px rgba(0,0,0,0.1); transition: bottom 0.3s ease-in-out; z-index: 1050; max-height: 80vh; overflow-y: auto; }
+      .filter-sheet.active { bottom: 0; }
+      .filter-overlay { position: fixed; top:0; left:0; right:0; bottom:0; background: rgba(0,0,0,0.4); z-index: 1049; display: none; }
+      .filter-overlay.active { display: block; }
+      .filter-handle { width: 40px; height: 5px; background: #ddd; border-radius: 10px; margin: 10px auto; }
+      .filter-option.active { background-color: #005a70!important; color: white!important; border-color: #005a70!important; }
+       :root{ --wondr-cyan: #76ded4; --wondr-blue: #005a70; }
+    </style>
 </head>
 <body class="bg-light">
     <div id="app-container">
-        
+
         <!-- Header -->
         <div class="bg-white pt-4 pb-3 px-3 shadow-sm mb-2 position-sticky top-0 z-3">
             <h5 class="fw-bold mb-0" style="color: #005a70;">Statistik Rekap</h5>
@@ -18,19 +38,17 @@
 
         <section class="pb-5 pt-2">
             <div class="container-fluid px-3">
-                
+
                 <div class="d-flex justify-content-between align-items-center mb-3">
-                    <span class="fw-bold text-dark mb-0" style="font-size:0.8rem;">Periode Tutup Buku</span>
-                    <span class="badge bg-light text-dark border px-2 py-1"><i class="bi bi-filter me-1"></i>Filter</span>
+                    <span id="periodeJudul" class="fw-bold text-dark mb-0" style="font-size:0.8rem;">Periode Tutup Buku</span>
+                    <span id="btnFilter" class="badge bg-light text-dark border px-2 py-1" style="cursor:pointer;"><i class="bi bi-filter me-1"></i>Filter</span>
                 </div>
 
                 <!-- 1. Distribusi Layanan -->
                 <div class="card border-0 shadow-sm rounded-3 mb-3">
                     <div class="card-body p-3">
                         <h6 class="fw-bold text-dark mb-3" style="font-size: 0.8rem;">Distribusi Layanan</h6>
-                        <div class="mb-2"><div class="d-flex justify-content-between small mb-1" style="font-size:0.7rem;"><span class="text-muted">Terapi Wicara</span><span class="fw-bold text-dark">50%</span></div><div class="progress rounded-pill bg-light" style="height: 8px;"><div class="progress-bar rounded-pill" style="width: 50%; background-color: #005a70;"></div></div></div>
-                        <div class="mb-2"><div class="d-flex justify-content-between small mb-1" style="font-size:0.7rem;"><span class="text-muted">Fisioterapi</span><span class="fw-bold text-dark">30%</span></div><div class="progress rounded-pill bg-light" style="height: 8px;"><div class="progress-bar rounded-pill" style="width: 30%; background-color: #f78c22;"></div></div></div>
-                        <div class="mb-2"><div class="d-flex justify-content-between small mb-1" style="font-size:0.7rem;"><span class="text-muted">Terapi Okupasi</span><span class="fw-bold text-dark">20%</span></div><div class="progress rounded-pill bg-light" style="height: 8px;"><div class="progress-bar rounded-pill" style="width: 20%; background-color: var(--wondr-cyan);"></div></div></div>
+                        <div id="distribusiLayanan"><p class="text-center text-muted small">Memuat...</p></div>
                     </div>
                 </div>
 
@@ -38,22 +56,20 @@
                 <div class="card border-0 shadow-sm rounded-3 mb-3">
                     <div class="card-body p-3">
                         <h6 class="fw-bold text-dark mb-3" style="font-size: 0.8rem;">Statistik Kategori</h6>
-                        <div class="mb-2"><div class="d-flex justify-content-between small mb-1" style="font-size:0.7rem;"><span class="text-muted">Request</span><span class="fw-bold text-dark">40%</span></div><div class="progress rounded-pill bg-light" style="height: 8px;"><div class="progress-bar rounded-pill" style="width: 40%; background-color: #005a70;"></div></div></div>
-                        <div class="mb-2"><div class="d-flex justify-content-between small mb-1" style="font-size:0.7rem;"><span class="text-muted">Urutan</span><span class="fw-bold text-dark">35%</span></div><div class="progress rounded-pill bg-light" style="height: 8px;"><div class="progress-bar rounded-pill" style="width: 35%; background-color: #f78c22;"></div></div></div>
-                        <div class="mb-2"><div class="d-flex justify-content-between small mb-1" style="font-size:0.7rem;"><span class="text-muted">Permintaan Nama</span><span class="fw-bold text-dark">25%</span></div><div class="progress rounded-pill bg-light" style="height: 8px;"><div class="progress-bar rounded-pill" style="width: 25%; background-color: var(--wondr-cyan);"></div></div></div>
+                        <div id="statistikKategori"><p class="text-center text-muted small">Memuat...</p></div>
                     </div>
                 </div>
 
                 <!-- Card Ringkasan Total -->
                 <div class="row g-2 mb-3">
-                    <div class="col-6"><div class="card border-0 shadow-sm rounded-3 text-center p-3"><h3 class="mb-0 fw-bold" style="color: #005a70;">120</h3><span class="fw-bold text-muted mt-1" style="font-size: 0.65rem;">Jam Kerja</span></div></div>
-                    <div class="col-6"><div class="card border-0 shadow-sm rounded-3 text-center p-3"><h3 class="mb-0 fw-bold" style="color: #f78c22;">45</h3><span class="fw-bold text-muted mt-1" style="font-size: 0.65rem;">Total Klien</span></div></div>
+                    <div class="col-6"><div class="card border-0 shadow-sm rounded-3 text-center p-3"><h3 id="totalJam" class="mb-0 fw-bold" style="color: #005a70;">0</h3><span class="fw-bold text-muted mt-1" style="font-size: 0.65rem;">Jam Kerja</span></div></div>
+                    <div class="col-6"><div class="card border-0 shadow-sm rounded-3 text-center p-3"><h3 id="totalKlien" class="mb-0 fw-bold" style="color: #f78c22;">0</h3><span class="fw-bold text-muted mt-1" style="font-size: 0.65rem;">Total Sesi</span></div></div>
                 </div>
 
                 <!-- Tombol Ekspor -->
                 <div class="mb-5">
-                    <button type="button" class="btn w-100 rounded-pill py-2 fw-bold text-white shadow-sm d-flex align-items-center justify-content-center" 
-                            style="background-color: var(--wondr-blue); font-size: 0.8rem;" 
+                    <button type="button" class="btn w-100 rounded-pill py-2 fw-bold text-white shadow-sm d-flex align-items-center justify-content-center"
+                            style="background-color: var(--wondr-blue); font-size: 0.8rem;"
                             onclick="showExportAlert()">
                         <i class="bi bi-file-earmark-spreadsheet me-2"></i> Ekspor ke Excel
                     </button>
@@ -84,35 +100,179 @@
         </div>
     </div>
 
+    <!-- BOTTOMSHEET FILTER -->
+    <div id="filterOverlay" class="filter-overlay"></div>
+    <div id="filterSheet" class="filter-sheet">
+        <div class="filter-handle"></div>
+        <div class="p-3">
+            <h6 class="fw-bold mb-3">Filter Rekap</h6>
+            <p class="fw-bold mb-2" style="font-size:0.75rem;">Periode</p>
+            <div class="d-grid gap-2 mb-3" id="filterPeriode">
+                <button class="btn btn-primary rounded-pill filter-option" data-type="periode" data-value="semua">Semua</button>
+                <button class="btn btn-outline-secondary rounded-pill filter-option" data-type="periode" data-value="bulan_ini">Bulan Ini (19 - 18)</button>
+                <button class="btn btn-outline-secondary rounded-pill filter-option" data-type="periode" data-value="bulan_lalu">Bulan Lalu</button>
+            </div>
+            <p class="fw-bold mb-2" style="font-size:0.75rem;">Lokasi</p>
+            <div class="d-flex flex-wrap gap-2 mb-3" id="filterLokasi"></div>
+            <p class="fw-bold mb-2" style="font-size:0.75rem;">Produk</p>
+            <div class="d-flex flex-wrap gap-2 mb-3" id="filterProduk"></div>
+            <button id="btnResetFilter" class="btn btn-danger w-100 rounded-pill"><i class="bi bi-arrow-clockwise me-2"></i>Reset Filter</button>
+        </div>
+    </div>
+
+    <div class="loading-overlay" id="loading"><div class="spinner-border text-white mb-2"></div><p>Memuat...</p></div>
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.sheetjs.com/xlsx-latest/package/dist/xlsx.full.min.js"></script>
+    <script src="js/db.js"></script>
     <script>
+        let allSessions = [];
+        let activeFilters = { periode: 'semua', lokasi: 'semua', produk: 'semua' };
+        const colors = {'Javanese Massage': '#005a70', 'Refleksi': '#f78c22', 'Refleksi + Massage': '#76ded4', 'Massage + Totok Wajah': '#a78bfa'};
+        const catColors = {'Urutan': '#005a70', 'Request': '#f78c22', 'Permintaan Nama': '#76ded4'};
+
+        document.addEventListener("DOMContentLoaded", async function() {
+            const userId = localStorage.getItem('current_user_id');
+            if(!userId) { window.location.href = 'onboarding.html'; return; }
+
+            await loadRekap(userId);
+
+            document.getElementById('btnFilter').addEventListener('click', () => {
+                document.getElementById('filterSheet').classList.add('active');
+                document.getElementById('filterOverlay').classList.add('active');
+            });
+            document.getElementById('filterOverlay').addEventListener('click', () => {
+                document.getElementById('filterSheet').classList.remove('active');
+                document.getElementById('filterOverlay').classList.remove('active');
+            });
+
+            document.addEventListener('click', async (e) => {
+                if(e.target.classList.contains('filter-option')){
+                    const type = e.target.dataset.type;
+                    const value = e.target.dataset.value;
+                    activeFilters[type] = value;
+                    document.querySelectorAll(`[data-type="${type}"]`).forEach(b => { b.classList.remove('btn-primary', 'text-white'); b.classList.add('btn-outline-secondary'); });
+                    e.target.classList.add('btn-primary', 'text-white'); e.target.classList.remove('btn-outline-secondary');
+                    await loadRekap(userId);
+                }
+            });
+
+            document.getElementById('btnResetFilter').addEventListener('click', async () => {
+                activeFilters = { periode: 'semua', lokasi: 'semua', produk: 'semua' };
+                document.querySelectorAll('.filter-option').forEach(b => { b.classList.remove('btn-primary', 'text-white'); b.classList.add('btn-outline-secondary'); });
+                document.querySelector('[data-type="periode"][data-value="semua"]').classList.add('btn-primary', 'text-white');
+                document.querySelector('[data-type="lokasi"][data-value="semua"]').classList.add('btn-primary', 'text-white');
+                document.querySelector('[data-type="produk"][data-value="semua"]').classList.add('btn-primary', 'text-white');
+                await loadRekap(userId);
+            });
+        });
+
+        async function loadRekap(userId) {
+            document.getElementById('loading').style.display = 'flex';
+            try {
+                if(allSessions.length === 0){
+                    allSessions = await getSessionsByTherapist(userId);
+                    populateFilterOptions();
+                }
+
+                let filteredSessions = applyFilters(allSessions);
+                renderStats(filteredSessions);
+
+            } catch(err) { console.error(err); } finally {
+                document.getElementById('loading').style.display = 'none';
+            }
+        }
+
+        function applyFilters(sessions){
+            let filtered = [...sessions];
+            const now = new Date();
+            const monthNames = ["Jan", "Feb", "Mar", "Apr", "Mei", "Jun", "Jul", "Ags", "Sep", "Okt", "Nov", "Des"];
+            let judul = "Semua Periode";
+
+            if(activeFilters.periode === 'bulan_ini'){
+                const day = now.getDate(); let sM = now.getMonth(); let sY = now.getFullYear(); let eM = now.getMonth(); let eY = now.getFullYear();
+                if (day <= 18) { sM -= 1; if (sM < 0) { sM = 11; sY -= 1; } } else { eM += 1; if (eM > 11) { eM = 0; eY += 1; } }
+                const startDate = new Date(sY, sM, 19).getTime(); const endDate = new Date(eY, eM, 18, 23, 59, 59).getTime();
+                filtered = filtered.filter(s => s.timestamp >= startDate && s.timestamp <= endDate);
+                judul = `19 ${monthNames[sM]} - 18 ${monthNames[eM]} ${eY}`;
+            } else if(activeFilters.periode === 'bulan_lalu'){
+                let sM = now.getMonth() - 1; let sY = now.getFullYear(); let eM = now.getMonth() - 1; let eY = now.getFullYear();
+                if (sM < 0) { sM = 11; sY -= 1; }
+                const startDate = new Date(sY, sM, 19).getTime(); const endDate = new Date(eY, eM, 18, 23, 59, 59).getTime();
+                filtered = filtered.filter(s => s.timestamp >= startDate && s.timestamp <= endDate);
+                judul = `19 ${monthNames[sM]} - 18 ${monthNames[eM]} ${eY}`;
+            }
+            if(activeFilters.lokasi!== 'semua') filtered = filtered.filter(s => s.lokasi === activeFilters.lokasi);
+            if(activeFilters.produk!== 'semua') filtered = filtered.filter(s => s.produk === activeFilters.produk);
+
+            document.getElementById('periodeJudul').innerText = judul;
+            return filtered;
+        }
+
+        function renderStats(sessions){
+            const total = sessions.length;
+            // 1. DISTRIBUSI LAYAN / PRODUK
+            const distProduk = {};
+            sessions.forEach(s => { distProduk[s.produk] = (distProduk[s.produk] || 0) + 1; });
+            let htmlProduk = '';
+            for(const p in distProduk){
+                const persen = total > 0? Math.round((distProduk[p] / total) * 100) : 0;
+                htmlProduk += `<div class="mb-2"><div class="d-flex justify-content-between small mb-1" style="font-size:0.7rem;"><span class="text-muted">${p}</span><span class="fw-bold text-dark">${persen}%</span></div><div class="progress rounded-pill bg-light" style="height: 8px;"><div class="progress-bar rounded-pill" style="width: ${persen}%; background-color: ${colors[p] || '#ccc'};"></div></div></div>`;
+            }
+            document.getElementById('distribusiLayanan').innerHTML = htmlProduk || '<p class="text-center text-muted small">Tidak ada data</p>';
+
+            // 2. STATISTIK KATEGORI
+            const distKategori = {};
+            sessions.forEach(s => { distKategori[s.kategori] = (distKategori[s.kategori] || 0) + 1; });
+            let htmlKategori = '';
+            for(const k in distKategori){
+                const persen = total > 0? Math.round((distKategori[k] / total) * 100) : 0;
+                htmlKategori += `<div class="mb-2"><div class="d-flex justify-content-between small mb-1" style="font-size:0.7rem;"><span class="text-muted">${k}</span><span class="fw-bold text-dark">${persen}%</span></div><div class="progress rounded-pill bg-light" style="height: 8px;"><div class="progress-bar rounded-pill" style="width: ${persen}%; background-color: ${catColors[k] || '#ccc'};"></div></div></div>`;
+            }
+            document.getElementById('statistikKategori').innerHTML = htmlKategori || '<p class="text-center text-muted small">Tidak ada data</p>';
+
+            // 3. RINGKASAN
+            const totalMenit = sessions.reduce((sum, s) => sum + parseInt(s.durasi || 0), 0);
+            const totalJam = (totalMenit / 60).toFixed(1);
+            document.getElementById('totalJam').innerText = totalJam;
+            document.getElementById('totalKlien').innerText = total; // Ganti jadi Total Sesi biar akurat
+        }
+
+        function populateFilterOptions(){
+            const lokasiContainer = document.getElementById('filterLokasi');
+            const produkContainer = document.getElementById('filterProduk');
+            const lokasiUnik = [...new Set(allSessions.map(s => s.lokasi))];
+            const produkUnik = [...new Set(allSessions.map(s => s.produk))];
+            lokasiContainer.innerHTML = `<button class="btn btn-primary btn-sm rounded-pill filter-option" data-type="lokasi" data-value="semua">Semua</button>`;
+            lokasiUnik.forEach(l => { lokasiContainer.innerHTML += `<button class="btn btn-outline-secondary btn-sm rounded-pill filter-option" data-type="lokasi" data-value="${l}">${l}</button>`; });
+            produkContainer.innerHTML = `<button class="btn btn-primary btn-sm rounded-pill filter-option" data-type="produk" data-value="semua">Semua</button>`;
+            produkUnik.forEach(p => { produkContainer.innerHTML += `<button class="btn btn-outline-secondary btn-sm rounded-pill filter-option" data-type="produk" data-value="${p}">${p}</button>`; });
+        }
+
         function showExportAlert() {
             const overlay = document.getElementById('customPopup');
             const content = document.getElementById('popupContent');
-            content.classList.remove('animation-scale-down');
-            content.classList.add('animation-scale-up');
-            overlay.classList.remove('d-none');
-            overlay.classList.add('d-flex');
+            content.classList.remove('animation-scale-down'); content.classList.add('animation-scale-up');
+            overlay.classList.remove('d-none'); overlay.classList.add('d-flex');
             document.getElementById('popupBtn').onclick = function() { downloadExcel(); closePopup(); };
         }
-
         function closePopup() {
             const overlay = document.getElementById('customPopup');
             const content = document.getElementById('popupContent');
-            content.classList.remove('animation-scale-up');
-            content.classList.add('animation-scale-down');
-            setTimeout(() => {
-                overlay.classList.remove('d-flex');
-                overlay.classList.add('d-none');
-            }, 200);
+            content.classList.remove('animation-scale-up'); content.classList.add('animation-scale-down');
+            setTimeout(() => { overlay.classList.remove('d-flex'); overlay.classList.add('d-none'); }, 200);
         }
-
         function downloadExcel() {
+            const filteredSessions = applyFilters(allSessions);
+            const data = filteredSessions.map(s => ({
+                "ID": s.id, "Tanggal": new Date(s.timestamp).toLocaleDateString('id-ID'),
+                "Produk": s.produk, "Kategori": s.kategori, "Lokasi": s.lokasi, "Durasi Menit": s.durasi
+            }));
+            const ws = XLSX.utils.json_to_sheet(data);
             const wb = XLSX.utils.book_new();
-            const ws = XLSX.utils.aoa_to_sheet([["ID", "Tanggal", "Jenis Terapi", "Cabang", "Area", "Durasi"],["SVC-12345", "2026-07-13", "Terapi Wicara", "Amarta", "R.Sukamto", "45"]]);
             XLSX.utils.book_append_sheet(wb, ws, "Rekap Data");
-            XLSX.writeFile(wb, "TRP-9921-19JUL-18AGS2026.xlsx");
+            const namaFile = `Rekap-${localStorage.getItem('current_user_id')}-${document.getElementById('periodeJudul').innerText}.xlsx`;
+            XLSX.writeFile(wb, namaFile);
         }
     </script>
 </body>
