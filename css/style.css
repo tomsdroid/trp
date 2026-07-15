@@ -144,3 +144,41 @@ input[type="password"]::-ms-clear {
     from { transform: scale(0.9); opacity: 0; }
     to { transform: scale(1); opacity: 1; }
 }
+/* CUSTOM TOAST */
+.toast-custom {
+  position: fixed;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%) translateY(-100px);
+  z-index: 9999;
+  min-width: 280px;
+  max-width: 90%;
+  background: #fff;
+  border-radius: 12px;
+  padding: 12px 14px;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  opacity: 0;
+  transition: all 0.3s ease;
+  font-size: 0.8rem;
+}
+.toast-custom.show {
+  transform: translateX(-50%) translateY(0);
+  opacity: 1;
+}
+.toast-custom .icon {
+  width: 24px;
+  height: 24px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  font-size: 1rem;
+}
+.toast-success .icon { background: #d1fae5; color: #059669; }
+.toast-error .icon { background: #fee2e2; color: #dc2626; }
+.toast-info .icon { background: #dbeafe; color: #2563eb; }
+.toast-custom .text { flex: 1; color: #333; font-weight: 500; }

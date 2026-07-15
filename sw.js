@@ -5,6 +5,8 @@ const urlsToCache = [
   "./login.html",
   "./index.html",
   "./pengaturan.html",
+  "./kebijakan-privasi.html",
+  "./syarat-ketentuan.html",
   "./css/style.css",
   "./js/db.js",
   "./manifest.json",

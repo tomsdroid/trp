@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bantuan - TheraLog</title>
+    
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    
+    <style>
+        :root {
+            --primary-color: #005a70;
+            --secondary-color: #f78c22;
+        }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f8f9fa; display: flex; flex-direction: column; min-height: 100vh; }
+        .navbar-custom { background-color: var(--primary-color); box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+        .accordion-button:not(.collapsed) { background-color: rgba(0, 90, 112, 0.1); color: var(--primary-color); font-weight: bold; }
+        .accordion-button:focus { box-shadow: none; border-color: rgba(0, 90, 112, 0.1); }
+    </style>
+</head>
+<body>
+
+    <!-- Nav Minimalis -->
+<nav class="navbar navbar-custom py-2">
+    <div class="container px-4 d-flex align-items-center">
+        <!-- Tombol kembali yang lebih ringkas -->
+        <a href="./index.html" class="text-white text-decoration-none d-flex align-items-center" style="font-size: 1.2rem;">
+            <i class="bi bi-chevron-left"></i>
+        </a>
+        <!-- Judul di tengah (diatur dengan flex-grow agar tetap presisi di tengah) -->
+        <span class="fw-bold text-white fs-6 flex-grow-1 text-center">Pusat Bantuan</span>
+        <!-- Spacer agar judul tetap presisi di tengah -->
+        <div style="width: 24px;"></div> 
+    </div>
+</nav>
+
+    <!-- Konten Utama -->
+    <div class="container px-4 py-5 flex-grow-1">
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <div class="text-center mb-4">
+                    <div class="d-inline-flex align-items-center justify-content-center rounded-circle mb-3" style="width: 60px; height: 60px; background-color: rgba(0, 90, 112, 0.1); color: var(--primary-color);">
+                        <i class="bi bi-question-circle fs-2"></i>
+                    </div>
+                    <h4 class="fw-bold" style="color: var(--primary-color);">Ada yang bisa kami bantu?</h4>
+                    <p class="text-muted small">Temukan jawaban untuk pertanyaan umum seputar penggunaan TheraLog di bawah ini.</p>
+                </div>
+
+                <div class="accordion shadow-sm" id="accordionBantuan">
+                    <div class="accordion-item border-0 border-bottom">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq1">
+                                Bagaimana cara input log saat tidak ada internet?
+                            </button>
+                        </h2>
+                        <div id="faq1" class="accordion-collapse collapse" data-bs-parent="#accordionBantuan">
+                            <div class="accordion-body text-muted small">
+                                TheraLog dirancang dengan sistem <em>Offline-First</em>. Anda tetap bisa memasukkan log seperti biasa. Data akan disimpan di dalam memori HP Anda. Pastikan Anda tidak menghapus data browser/cache sebelum melakukan sinkronisasi saat terhubung ke internet.
+                            </div>
+                        </div>
+                    </div>
+                    <div class="accordion-item border-0 border-bottom">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq2">
+                                Kapan data saya disinkronkan ke server pusat?
+                            </button>
+                        </h2>
+                        <div id="faq2" class="accordion-collapse collapse" data-bs-parent="#accordionBantuan">
+                            <div class="accordion-body text-muted small">
+                                Aplikasi menggunakan fitur <em>Smart Sync</em>. Jika Anda membuka aplikasi dan telah melewati 24 jam sejak sinkronisasi terakhir, aplikasi akan otomatis mengirim data ke server (membutuhkan koneksi internet). Anda juga bisa melakukan sinkronisasi manual di menu <strong>Pengaturan > Status Sinkronisasi</strong>.
+                            </div>
+                        </div>
+                    </div>
+                    <div class="accordion-item border-0">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq3">
+                                Apa yang harus saya lakukan jika lupa PIN?
+                            </button>
+                        </h2>
+                        <div id="faq3" class="accordion-collapse collapse" data-bs-parent="#accordionBantuan">
+                            <div class="accordion-body text-muted small">
+                                Silakan hubungi Administrator atau Kepala Cabang Anda untuk melakukan <em>reset</em> PIN. Karena alasan keamanan data, reset PIN tidak dapat dilakukan secara mandiri dari dalam aplikasi.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="text-center mt-5">
+                    <p class="small text-muted mb-2">Masih butuh bantuan teknis?</p>
+                    <a href="mailto:support@theralog.com" class="btn btn-outline-secondary rounded-pill py-2 px-4 shadow-sm" style="font-size: 0.85rem;">
+                        <i class="bi bi-envelope me-2"></i> Hubungi Dukungan
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-white py-4 mt-auto border-top">
+        <div class="container text-center">
+            <p class="text-muted small mb-0">&copy; 2026 TheraLog.</p>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

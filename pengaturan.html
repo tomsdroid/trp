@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Pengaturan - TheraLog</title>
-    <!-- PWA -->
     <link rel="manifest" href="manifest.json">
     <link rel="apple-touch-icon" href="apple-touch-icon.png">
     <meta name="apple-mobile-web-app-capable" content="yes">
@@ -12,22 +11,24 @@
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="css/style.css">
     <link rel="icon" type="image/png" href="favicon-96x96.png">
     <style>
         .animation-scale-up { animation: scaleUp 0.2s ease-out forwards; }
         @keyframes scaleUp { from { transform: scale(0.8); opacity: 0; } to { transform: scale(1); opacity: 1; } }
-        .animation-scale-down { animation: scaleDown 0.2s ease-in forwards; }
-        @keyframes scaleDown { from { transform: scale(1); opacity: 1; } to { transform: scale(0.8); opacity: 0; } }
         .avatar-img { width: 100%; height: 100%; object-fit: cover; border-radius: 1rem; }
         #bottom-nav .nav-item { font-size: 0.65rem; text-align: center; padding: 8px 0; }
         #bottom-nav .nav-item.active { color: #005a70 !important; }
         #bottom-nav .nav-item { color: #6c757d !important; }
+        .social-link { width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; border-radius: 50%; background: #f8f9fa; color: #005a70; text-decoration: none; transition: 0.2s; }
+        .social-link:active { transform: scale(0.9); background: #e9ecef; }
+        .sync-status { font-size: 0.65rem; color: #6c757d; }
     </style>
 </head>
 <body class="bg-light">
     <div id="app-container">
         
-        <div class="bg-white pt-4 pb-3 px-3 shadow-sm mb-2 position-sticky top-0 z-3">
+        <div class="bg-white pt-4 pb-3 px-3 shadow-sm mb-2 position-sticky top-0" style="z-index: 1020;">
             <h5 class="fw-bold mb-0" style="color: #005a70;">Pengaturan</h5>
         </div>
 
@@ -35,11 +36,9 @@
             <!-- Profil Singkat -->
             <div class="container-fluid px-3 text-center mt-2 mb-4">
                 <div onclick="showAvatarZoom()" class="bg-white rounded-4 d-inline-flex align-items-center justify-content-center shadow-sm mb-2" style="width: 80px; height: 80px; cursor: pointer; border: 1px solid #eee; overflow: hidden;">
-                    <!-- ID BUAT JS -->
                     <img id="avatarPreview" src="#" class="avatar-img" style="display:none;">
                     <i id="avatarIcon" class="bi bi-person-fill" style="font-size: 3.5rem; color: #005a70;"></i>
                 </div>
-                <!-- ID BUAT JS -->
                 <h6 id="profileNama" class="fw-bold text-dark mb-0">Memuat...</h6>
                 <p id="profileCabang" class="text-muted mb-0" style="font-size: 0.75rem;">Memuat...</p>
                 <p id="profileID" class="fw-bold mt-1" style="color: #f78c22; font-size: 0.7rem;">ID: -</p>
@@ -58,33 +57,52 @@
                             <div class="bg-light rounded p-2 me-3 d-flex align-items-center justify-content-center" style="width: 32px; height: 32px;"><i class="bi bi-shield-lock text-dark"></i></div>
                             <span class="fw-bold flex-grow-1" style="font-size: 0.75rem;">Ubah PIN / Password</span><i class="bi bi-chevron-right text-muted" style="font-size: 0.8rem;"></i>
                         </a>
-                        <div class="list-group-item p-3 d-flex align-items-center text-dark">
-                            <div class="bg-light rounded p-2 me-3 d-flex align-items-center justify-content-center" style="width: 32px; height: 32px;"><i class="bi bi-fingerprint text-dark fs-5"></i></div>
-                            <span class="fw-bold flex-grow-1" style="font-size: 0.75rem;">Login Sidik Jari / Face ID</span>
-                            <div class="form-check form-switch mb-0"><input class="form-check-input fs-5 m-0" type="checkbox" id="switchBiometric"></div>
-                        </div>
-                    </div>
-                </div>
-
-                <span class="fw-bold text-muted d-block mb-2 ps-1" style="font-size: 0.7rem;">SISTEM</span>
-                <div class="card border-0 shadow-sm rounded-3 mb-4">
-                    <div class="list-group list-group-flush rounded-3">
-                        <a href="#" class="list-group-item p-3 d-flex align-items-center text-dark text-decoration-none">
-                            <div class="bg-light rounded p-2 me-3 d-flex align-items-center justify-content-center" style="width: 32px; height: 32px;"><i class="bi bi-cloud-arrow-up text-dark"></i></div>
-                            <span class="fw-bold flex-grow-1" style="font-size: 0.75rem;">Sinkronisasi Data</span>
-                            <span class="badge rounded-pill fw-normal me-2" style="background-color: #76ded4; color: #005a70; font-size: 0.65rem;">Otomatis</span>
+                        <a href="#" class="list-group-item p-3 d-flex align-items-center text-dark text-decoration-none" onclick="showBantuan()">
+                            <div class="bg-light rounded p-2 me-3 d-flex align-items-center justify-content-center" style="width: 32px; height: 32px;"><i class="bi bi-question-circle text-dark"></i></div>
+                            <span class="fw-bold flex-grow-1" style="font-size: 0.75rem;">Bantuan</span><i class="bi bi-chevron-right text-muted" style="font-size: 0.8rem;"></i>
                         </a>
                     </div>
                 </div>
 
-                <button type="button" class="btn bg-white text-danger w-100 rounded-pill shadow-sm fw-bold py-2 mb-4 d-flex justify-content-center align-items-center" style="font-size: 0.8rem;" onclick="showLogoutAlert()">
+                <span class="fw-bold text-muted d-block mb-2 ps-1" style="font-size: 0.7rem;">SISTEM & INFO</span>
+                <div class="card border-0 shadow-sm rounded-3 mb-4">
+                    <div class="list-group list-group-flush rounded-3">
+                        <!-- SINKRONISASI -->
+                        <a href="#" class="list-group-item p-3 d-flex align-items-center text-dark text-decoration-none" onclick="showSyncStatus()">
+                            <div class="bg-light rounded p-2 me-3 d-flex align-items-center justify-content-center" style="width: 32px; height: 32px;"><i class="bi bi-cloud-check text-dark"></i></div>
+                            <div class="flex-grow-1 d-flex justify-content-between align-items-center">
+                                <div>
+                                    <span class="fw-bold d-block" style="font-size: 0.75rem;">Sinkronisasi</span>
+                                    <span class="sync-status text-muted d-block" style="font-size: 0.65rem;">Terakhir Sinkron: <span id="lastSyncText">Belum pernah</span></span>
+                                </div>
+                                <span class="badge rounded-pill fw-normal" style="background-color: #76ded4; color: #005a70; font-size: 0.65rem;">Otomatis</span>
+                            </div>
+                        </a>
+                        <!-- TENTANG APLIKASI -->
+                        <a href="#" class="list-group-item p-3 d-flex align-items-center text-dark text-decoration-none" onclick="showTentangApp()">
+                            <div class="bg-light rounded p-2 me-3 d-flex align-items-center justify-content-center" style="width: 32px; height: 32px;"><i class="bi bi-info-circle text-dark"></i></div>
+                            <span class="fw-bold flex-grow-1" style="font-size: 0.75rem;">Tentang Aplikasi</span><i class="bi bi-chevron-right text-muted" style="font-size: 0.8rem;"></i>
+                        </a>
+                        <a href="#" class="list-group-item p-3 d-flex align-items-center text-dark text-decoration-none" onclick="openPrivacy()">
+                            <div class="bg-light rounded p-2 me-3 d-flex align-items-center justify-content-center" style="width: 32px; height: 32px;"><i class="bi bi-shield-check text-dark"></i></div>
+                            <span class="fw-bold flex-grow-1" style="font-size: 0.75rem;">Kebijakan Privasi</span><i class="bi bi-box-arrow-up-right text-muted" style="font-size: 0.8rem;"></i>
+                        </a>
+                        <!-- SYARAT & KETENTUAN -->
+                        <a href="#" class="list-group-item p-3 d-flex align-items-center text-dark text-decoration-none" onclick="openTnC()">
+                            <div class="bg-light rounded p-2 me-3 d-flex align-items-center justify-content-center" style="width: 32px; height: 32px;"><i class="bi bi-file-earmark-text text-dark"></i></div>
+                            <span class="fw-bold flex-grow-1" style="font-size: 0.75rem;">Syarat & Ketentuan</span><i class="bi bi-box-arrow-up-right text-muted" style="font-size: 0.8rem;"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <button type="button" class="btn bg-white text-danger w-100 rounded-pill shadow-sm fw-bold py-2 mb-5 d-flex justify-content-center align-items-center" style="font-size: 0.8rem;" onclick="showLogoutAlert()">
                     <i class="bi bi-box-arrow-right me-2 fs-6"></i> Keluar Akun
                 </button>
             </div>
         </section>
 
         <!-- Navigasi Bawah -->
-        <nav id="bottom-nav" class="navbar fixed-bottom bg-white shadow-lg rounded-top-3">
+        <nav id="bottom-nav" class="navbar fixed-bottom bg-white shadow-lg rounded-top-3" style="z-index: 1030;">
             <div class="container-fluid justify-content-around px-2">
                 <a href="index.html" class="nav-item text-decoration-none text-muted"><i class="bi bi-house-door-fill fs-5 d-block text-center"></i><span class="nav-label">Beranda</span></a>
                 <a href="riwayat.html" class="nav-item text-decoration-none text-muted"><i class="bi bi-clock-history fs-5 d-block text-center"></i><span class="nav-label">Riwayat</span></a>
@@ -93,21 +111,52 @@
             </div>
         </nav>
 
-        <!-- POPUP -->
-        <div id="customPopup" class="position-absolute top-0 start-0 w-100 h-100 bg-dark bg-opacity-50 d-none z-3 flex-column justify-content-center align-items-center px-4" style="backdrop-filter: blur(2px);">
-            <div id="popupContent" class="bg-white w-100 rounded-4 p-4 text-center shadow animation-scale-up">
-                <div class="mb-3 d-inline-flex align-items-center justify-content-center rounded-4" style="width: 60px; height: 60px; background-color: #f8f9fa;"><i id="popupIcon" class="bi bi-fingerprint" style="font-size: 2.2rem; color: #005a70;"></i></div>
-                <h6 id="popupTitle" class="fw-bold text-dark mb-2">Verifikasi Biometrik</h6>
-                <p id="popupMessage" class="text-muted mb-4" style="font-size: 0.75rem; line-height: 1.5;">Silakan sentuh sensor sidik jari Anda.</p>
-                <button type="button" id="popupBtn" class="btn w-100 rounded-pill py-2 fw-bold text-white shadow-sm" style="background-color: #f78c22; font-size: 0.8rem;" onclick="closePopup()">Batal</button>
+
+        <!-- POPUP STATUS SINKRON (Versi Coming Soon) -->
+        <div id="syncPopup" class="position-fixed top-0 start-0 w-100 h-100 bg-dark bg-opacity-50 d-none flex-column justify-content-center align-items-center px-4" style="backdrop-filter: blur(2px); z-index: 1050;" onclick="closeSync()">
+            <div class="bg-white w-100 rounded-4 p-4 text-center shadow animation-scale-up" onclick="event.stopPropagation()">
+                <div class="mb-3 mt-2">
+                    <i class="bi bi-cone-striped text-warning" style="font-size: 3.5rem;"></i>
+                </div>
+                <h6 class="fw-bold text-dark mb-2">Pembaruan Mendatang</h6>
+                <p class="small text-muted mb-4" style="line-height: 1.5;">Fitur sinkronisasi otomatis dan manual sedang dalam tahap pengembangan dan akan segera tiba di <i>update</i> selanjutnya.</p>
+                <button class="btn btn-light w-100 rounded-pill py-2 fw-bold text-dark" style="font-size: 0.8rem; background-color: #f8f9fa; border: 1px solid #dee2e6;" onclick="closeSync()">Tutup</button>
+            </div>
+        </div>
+
+        <!-- POPUP TENTANG APLIKASI -->
+        <div id="tentangPopup" class="position-fixed top-0 start-0 w-100 h-100 bg-dark bg-opacity-50 d-none flex-column justify-content-center align-items-center px-4" style="backdrop-filter: blur(2px); z-index: 1050;" onclick="closeTentang()">
+            <div id="tentangContent" class="bg-white w-100 rounded-4 p-4 text-center shadow animation-scale-up" style="max-height: 90vh; overflow-y: auto;" onclick="event.stopPropagation()">
+                <img src="favicon-96x96.png" width="60" height="60" class="mb-3 rounded-4 shadow-sm">
+                <h6 id="appName" class="fw-bold text-dark mb-1">TheraLog</h6>
+                <p id="appVersion" class="text-muted mb-2" style="font-size: 0.7rem;">v1.0.0</p>
+                <p id="appDesc" class="text-muted mb-3" style="font-size: 0.75rem;"></p>
+                <div id="featureList" class="text-start small text-muted mb-3"></div>
+                <hr class="my-3">
+                <p class="small fw-bold mb-2">Hubungi Kami</p>
+                <div id="socialLinks" class="d-flex justify-content-center gap-3 mb-3"></div>
+                <p id="appEmail" class="small text-muted mb-3"></p>
+                <button type="button" class="btn w-100 rounded-pill py-2 fw-bold text-white shadow-sm" style="background-color: #005a70; font-size: 0.8rem;" onclick="closeTentang()">Tutup</button>
+            </div>
+        </div>
+
+        <!-- POPUP BANTUAN -->
+        <div id="bantuanPopup" class="position-fixed top-0 start-0 w-100 h-100 bg-dark bg-opacity-50 d-none flex-column justify-content-center align-items-center px-4" style="backdrop-filter: blur(2px); z-index: 1050;" onclick="closeBantuan()">
+            <div class="bg-white w-100 rounded-4 p-4 shadow animation-scale-up" onclick="event.stopPropagation()">
+                <h6 class="fw-bold text-dark mb-3"><i class="bi bi-question-circle me-2"></i>Pusat Bantuan</h6>
+                <ul class="small text-muted">
+                    <li class="mb-2"><strong>Input Log:</strong> Klik tombol "Input Log Baru" di beranda.</li>
+                    <li class="mb-2"><strong>Import Data:</strong> Wajib 1x di awal untuk melihat statistik.</li>
+                    <li><strong>Ubah PIN:</strong> Lakukan berkala untuk keamanan akun Anda.</li>
+                </ul>
+                <button type="button" class="btn w-100 rounded-pill py-2 fw-bold text-white shadow-sm mt-3" style="background-color: #005a70; font-size: 0.8rem;" onclick="closeBantuan()">Mengerti</button>
             </div>
         </div>
 
         <!-- AVATAR ZOOM MODAL -->
-        <div id="avatarModal" class="position-absolute top-0 start-0 w-100 h-100 bg-dark bg-opacity-75 d-none z-3 flex-column justify-content-center align-items-center" style="backdrop-filter: blur(3px);" onclick="closeAvatarZoom()">
+        <div id="avatarModal" class="position-fixed top-0 start-0 w-100 h-100 bg-dark bg-opacity-75 d-none flex-column justify-content-center align-items-center" style="backdrop-filter: blur(3px); z-index: 1050;" onclick="closeAvatarZoom()">
             <div id="avatarContent" class="animation-scale-up text-center">
                 <div class="bg-white rounded-4 d-inline-flex align-items-center justify-content-center shadow-lg" style="width: 250px; height: 250px; overflow: hidden;">
-                    <!-- ID BUAT JS -->
                     <img id="avatarZoom" src="#" class="avatar-img" style="display:none;">
                     <i id="avatarIconZoom" class="bi bi-person-fill" style="font-size: 10rem; color: #005a70;"></i>
                 </div>
@@ -116,97 +165,134 @@
             </div>
         </div>
 
+        <!-- Custom Toast Container -->
+        <div id="customToast" class="position-fixed p-3 bottom-0 end-0" style="z-index: 9999; display: none; padding-bottom: 80px !important;">
+            <div class="toast show align-items-center text-white border-0 shadow-lg" style="background-color: #005a70; border-radius: 12px;" role="alert" aria-live="assertive" aria-atomic="true">
+                <div class="d-flex">
+                    <div class="toast-body d-flex align-items-center">
+                        <i id="toastIcon" class="bi bi-check-circle-fill me-2 fs-5"></i>
+                        <span id="toastMsg" style="font-size: 0.8rem; font-weight: 600;">Pesan di sini</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
     </div>
 
+    <!-- Scripts -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="js/db.js"></script>
+    <script src="js/script.js"></script>
     <script>
         let currentUserData = null;
+        let appInfo = null;
+        const userId = localStorage.getItem('current_user_id');
+        const API_URL = "https://script.google.com/macros/s/AKfycbx3hQszNy0HxAy96zI1gpg5htfpHAYbyr9uCaK7XtD-IKhG64uZvFMmf1E6CvwstaaP/exec";
 
-        // AMBIL DATA DARI INDEXEDDB SAAT HALAMAN LOAD
         document.addEventListener("DOMContentLoaded", async function() {
-            const userId = localStorage.getItem('current_user_id');
             if(!userId){ window.location.href = 'index.html'; return; }
+
+            try { appInfo = await (await fetch('app-info.json')).json(); } catch(err) {}
 
             try {
                 currentUserData = await getTherapist(userId);
-
                 if(currentUserData){
-                    // ISI DATA PROFIL
                     document.getElementById('profileNama').innerText = currentUserData.fullname;
-                    document.getElementById('profileCabang').innerText = `Terapis ${currentUserData.branch} ${currentUserData.area}`; // UDAH DI FIX
+                    document.getElementById('profileCabang').innerText = `Terapis ${currentUserData.branch} ${currentUserData.area}`;
                     document.getElementById('profileID').innerText = `ID: ${currentUserData.therapist_id}`;
-                    document.getElementById('zoomNama').innerText = currentUserData.fullname;
-
-                    // ISI AVATAR
                     const avatarSrc = currentUserData.avatarUrl || currentUserData.avatar;
                     if(avatarSrc){
                         document.getElementById('avatarPreview').src = avatarSrc;
                         document.getElementById('avatarPreview').style.display = 'block';
                         document.getElementById('avatarIcon').style.display = 'none';
-
-                        document.getElementById('avatarZoom').src = avatarSrc;
-                        document.getElementById('avatarZoom').style.display = 'block';
-                        document.getElementById('avatarIconZoom').style.display = 'none';
                     }
-                } else {
-                    alert("Data user tidak ditemukan");
                 }
-            } catch(err){ console.error(err); }
-
-            // BIOMETRIK
-            const biometricSwitch = document.getElementById('switchBiometric');
-            const bioStatus = localStorage.getItem(`bio_${userId}`);
-            if(bioStatus === 'true') biometricSwitch.checked = true;
-
-            biometricSwitch.addEventListener('change', function() {
-                if (this.checked) {
-                    showPopup('Aktifkan Biometrik', 'Gunakan sensor sidik jari atau Face ID Anda untuk login cepat.', 'bi-fingerprint', '#005a70', 'Batal', '#f78c22', true);
-                    localStorage.setItem(`bio_${userId}`, 'true');
-                } else {
-                    showPopup('Biometrik Dinonaktifkan', 'Fitur login menggunakan sidik jari atau Face ID telah dimatikan.', 'bi-shield-lock-fill', '#6c757d', 'Tutup', '#005a70');
-                    localStorage.setItem(`bio_${userId}`, 'false');
-                }
-            });
+            } catch(err){ showToast("Gagal memuat data", "error"); }
+            
+            updateSyncStatus();
         });
 
-        // LOGOUT
-        function showLogoutAlert() {
-            showPopup('Keluar Aplikasi', 'Apakah Anda yakin ingin keluar dari akun TheraLog?', 'bi-box-arrow-right', '#dc3545', 'Ya, Keluar', '#dc3545');
-            document.getElementById('popupBtn').onclick = () => {
-                localStorage.setItem('is_logged_in', 'false'); 
-                // localStorage.removeItem('is_logged_in');
-                // localStorage.removeItem('current_user_id');
-                window.location.href = 'login.html';
+        function showToast(msg, type = "success") {
+            const toastContainer = document.getElementById('customToast');
+            const toastIcon = document.getElementById('toastIcon');
+            const toast = toastContainer.querySelector('.toast');
+            
+            document.getElementById('toastMsg').innerText = msg;
+            
+            if (type === "success") {
+                toast.style.backgroundColor = "#005a70";
+                toastIcon.className = "bi bi-check-circle-fill me-2 fs-5";
+            } else if (type === "error") {
+                toast.style.backgroundColor = "#dc3545";
+                toastIcon.className = "bi bi-exclamation-triangle-fill me-2 fs-5";
+            } else {
+                toast.style.backgroundColor = "#6c757d";
+                toastIcon.className = "bi bi-info-circle-fill me-2 fs-5";
             }
+
+            toastContainer.style.display = 'block';
+            setTimeout(() => { toastContainer.style.display = 'none'; }, 3500);
         }
 
-        // POPUP & AVATAR ZOOM
-        function showPopup(title, message, iconClass, iconColor, btnText, btnBgColor, isCancelAction = false) {
-            document.getElementById('popupTitle').innerText = title;
-            document.getElementById('popupMessage').innerText = message;
-            const icon = document.getElementById('popupIcon'); icon.className = `bi ${iconClass}`; icon.style.color = iconColor;
-            const btn = document.getElementById('popupBtn'); btn.innerText = btnText; btn.style.backgroundColor = btnBgColor;
-            if(isCancelAction) { btn.onclick = function() { document.getElementById('switchBiometric').checked = false; localStorage.setItem(`bio_${localStorage.getItem('current_user_id')}`, 'false'); closePopup(); }; } 
-            else { btn.onclick = closePopup; }
-            const overlay = document.getElementById('customPopup'); const content = document.getElementById('popupContent');
-            content.classList.remove('animation-scale-down'); content.classList.add('animation-scale-up');
-            overlay.classList.remove('d-none'); overlay.classList.add('d-flex');
+        // 1. STATUS SINKRONISASI (Versi Coming Soon)
+        function updateSyncStatus() {
+            const lastSync = localStorage.getItem('last_sync');
+            // Hanya update teks di menu list
+            document.getElementById('lastSyncText').innerText = lastSync ? new Date(lastSync).toLocaleString('id-ID') : 'Belum pernah';
         }
-        function closePopup() {
-            const overlay = document.getElementById('customPopup'); const content = document.getElementById('popupContent');
-            content.classList.remove('animation-scale-up'); content.classList.add('animation-scale-down');
-            setTimeout(() => { overlay.classList.remove('d-flex'); overlay.classList.add('d-none'); }, 200);
+
+        function showSyncStatus() {
+            document.getElementById('syncPopup').classList.remove('d-none');
+            document.getElementById('syncPopup').classList.add('d-flex');
         }
+
+        function closeSync() {
+            document.getElementById('syncPopup').classList.add('d-none');
+            document.getElementById('syncPopup').classList.remove('d-flex');
+        }
+
+        async function showTentangApp() {
+            if(!appInfo) { showToast("Gagal memuat data aplikasi", "error"); return; }
+            document.getElementById('appName').innerText = appInfo.appName;
+            document.getElementById('appVersion').innerText = `v${appInfo.version}`;
+            document.getElementById('appDesc').innerText = appInfo.description;
+            document.getElementById('appEmail').innerHTML = `<i class="bi bi-envelope me-1"></i>${appInfo.email}`;
+            let featureHTML = ''; appInfo.features.forEach(f => { featureHTML += `<p class="mb-1"><i class="bi bi-check-circle-fill text-success me-2"></i>${f}</p>`; });
+            document.getElementById('featureList').innerHTML = featureHTML;
+            let socialHTML = ''; appInfo.social.forEach(s => { socialHTML += `<a href="${s.url}" target="_blank" class="social-link"><i class="bi ${s.icon} fs-5"></i></a>`; });
+            document.getElementById('socialLinks').innerHTML = socialHTML;
+            document.getElementById('tentangPopup').classList.remove('d-none');
+            document.getElementById('tentangPopup').classList.add('d-flex');
+        }
+        function closeTentang() {
+            document.getElementById('tentangPopup').classList.add('d-none');
+            document.getElementById('tentangPopup').classList.remove('d-flex');
+        }
+
+        function openPrivacy() { window.location.href = 'kebijakan-privasi.html'; }
+        function openTnC() { window.location.href = 'syarat-ketentuan.html'; }
+
+        function showBantuan() { document.getElementById('bantuanPopup').classList.remove('d-none'); document.getElementById('bantuanPopup').classList.add('d-flex'); }
+        function closeBantuan() { document.getElementById('bantuanPopup').classList.add('d-none'); document.getElementById('bantuanPopup').classList.remove('d-flex'); }
+        function showLogoutAlert() { if(confirm("Apakah Anda yakin ingin keluar?")){ localStorage.setItem('is_logged_in', 'false'); showToast("Berhasil keluar", "success"); setTimeout(() => { window.location.href = 'login.html'; }, 800); } }
+        
         function showAvatarZoom() {
-            const modal = document.getElementById('avatarModal'); const content = document.getElementById('avatarContent');
-            content.classList.remove('animation-scale-down'); content.classList.add('animation-scale-up');
-            modal.classList.remove('d-none'); modal.classList.add('d-flex');
+            const avatarSrc = document.getElementById('avatarPreview').src;
+            if(avatarSrc && avatarSrc !== '#' && avatarSrc !== window.location.href + '#'){
+                document.getElementById('avatarZoom').src = avatarSrc;
+                document.getElementById('avatarZoom').style.display = 'block';
+                document.getElementById('avatarIconZoom').style.display = 'none';
+            } else {
+                document.getElementById('avatarZoom').style.display = 'none';
+                document.getElementById('avatarIconZoom').style.display = 'block';
+            }
+            document.getElementById('zoomNama').innerText = currentUserData ? currentUserData.fullname : '-';
+            document.getElementById('avatarModal').classList.remove('d-none');
+            document.getElementById('avatarModal').classList.add('d-flex');
         }
         function closeAvatarZoom() {
-            const modal = document.getElementById('avatarModal'); const content = document.getElementById('avatarContent');
-            content.classList.remove('animation-scale-up'); content.classList.add('animation-scale-down');
-            setTimeout(() => { modal.classList.remove('d-flex'); modal.classList.add('d-none'); }, 200);
+            document.getElementById('avatarModal').classList.add('d-none');
+            document.getElementById('avatarModal').classList.remove('d-flex');
         }
     </script>
 </body>

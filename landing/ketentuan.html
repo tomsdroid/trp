@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Syarat & Ketentuan - TheraLog</title>
+    
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    
+    <style>
+        :root { --primary-color: #005a70; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f8f9fa; display: flex; flex-direction: column; min-height: 100vh; }
+        .navbar-custom { background-color: var(--primary-color); box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+        .content-card { border-radius: 1.2rem; }
+    </style>
+</head>
+<body>
+
+    <!-- Nav Minimalis -->
+<nav class="navbar navbar-custom py-2">
+    <div class="container px-4 d-flex align-items-center">
+        <!-- Tombol kembali yang lebih ringkas -->
+        <a href="./index.html" class="text-white text-decoration-none d-flex align-items-center" style="font-size: 1.2rem;">
+            <i class="bi bi-chevron-left"></i>
+        </a>
+        <!-- Judul di tengah (diatur dengan flex-grow agar tetap presisi di tengah) -->
+        <span class="fw-bold text-white fs-6 flex-grow-1 text-center">Syarat & Ketentuan</span>
+        <!-- Spacer agar judul tetap presisi di tengah -->
+        <div style="width: 24px;"></div> 
+    </div>
+</nav>
+
+    <div class="container px-4 py-5 flex-grow-1">
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <div class="card border-0 shadow-sm content-card p-4 p-md-5">
+                    <h5 class="fw-bold mb-4" style="color: var(--primary-color);">Syarat & Ketentuan Penggunaan</h5>
+                    
+                    <div class="text-secondary" style="font-size: 0.85rem; line-height: 1.7;">
+                        <p>Dengan mengakses dan menggunakan aplikasi TheraLog, Anda menyatakan setuju untuk terikat oleh Syarat dan Ketentuan berikut:</p>
+                        
+                        <h6 class="fw-bold text-dark mt-4">1. Kewajiban Pengguna</h6>
+                        <ul class="mb-0">
+                            <li class="mb-2">Anda wajib memasukkan data log sesi terapi secara akurat, jujur, dan tepat waktu.</li>
+                            <li class="mb-2">Anda bertanggung jawab penuh atas segala aktivitas yang terjadi di bawah akun (ID) Anda.</li>
+                            <li class="mb-2">Dilarang memanipulasi aplikasi atau data lokal untuk mengubah durasi atau jumlah layanan.</li>
+                        </ul>
+
+                        <h6 class="fw-bold text-dark mt-4">2. Sinkronisasi Rutin</h6>
+                        <p>Sebagai pengguna, Anda diwajibkan untuk membuka aplikasi saat memiliki koneksi internet yang stabil guna memastikan proses <em>Smart Sync</em> berjalan, sehingga data lokal di perangkat Anda terunggah ke peladen pusat.</p>
+
+                        <h6 class="fw-bold text-dark mt-4">3. Ketersediaan Layanan</h6>
+                        <p>TheraLog berupaya menjaga layanan tetap berjalan optimal. Namun, kami tidak menjamin bahwa aplikasi akan terbebas dari gangguan (*bugs*). Jika terjadi kehilangan data akibat pembersihan *cache* perangkat secara sepihak sebelum data disinkronkan, hal tersebut di luar tanggung jawab pengembang.</p>
+
+                        <h6 class="fw-bold text-dark mt-4">4. Perubahan Ketentuan</h6>
+                        <p>Manajemen berhak untuk memodifikasi, menambah, atau menghapus bagian dari Syarat & Ketentuan ini kapan saja tanpa pemberitahuan langsung. Penggunaan aplikasi yang berkelanjutan dianggap sebagai persetujuan Anda atas perubahan tersebut.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="bg-white py-4 mt-auto border-top">
+        <div class="container text-center">
+            <p class="text-muted small mb-0">&copy; 2026 TheraLog.</p>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

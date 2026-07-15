@@ -13,6 +13,7 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css"/>
+    <link rel="stylesheet" href="css/style.css"> <!-- CSS TOAST TARUH SINI -->
     <link rel="icon" type="image/png" href="favicon-96x96.png">
     <style>
         body { background-color: #fff; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif; }
@@ -140,45 +141,33 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
     <script src="js/db.js"></script>
+    <script src="js/script.js"></script> <!-- IMPORT showToast -->
     <script>
         const API_URL = "https://script.google.com/macros/s/AKfycbx3hQszNy0HxAy96zI1gpg5htfpHAYbyr9uCaK7XtD-IKhG64uZvFMmf1E6CvwstaaP/exec"; 
         
         // ==========================================
-        // LOGIKA INSTALL PWA & PUSH NOTIFICATION
+        // LOGIKA INSTALL PWA - UDAH HAPUS NOTIF NATIVE
         // ==========================================
         let deferredPrompt;
         const installModal = new bootstrap.Modal(document.getElementById('installModal'));
         const btnInstallApp = document.getElementById('btnInstallApp');
 
-        // 1. Tangkap event siap install dari browser
         window.addEventListener('beforeinstallprompt', (e) => {
             e.preventDefault();
             deferredPrompt = e;
-            
-            // Cek jika user belum decline di sesi ini
             if(!sessionStorage.getItem('installPromptDeclined')){
-                setTimeout(() => {
-                    installModal.show();
-                }, 1000);
+                setTimeout(() => { installModal.show(); }, 1000);
             }
         });
 
-        // 2. Aksi tombol "Install Sekarang"
         btnInstallApp.addEventListener('click', async () => {
-            // Minta izin notifikasi langsung
-            if ('Notification' in window && Notification.permission !== 'granted' && Notification.permission !== 'denied') {
-                Notification.requestPermission(); 
-            }
-
             if (deferredPrompt) {
                 installModal.hide();
                 deferredPrompt.prompt();
-                
                 const { outcome } = await deferredPrompt.userChoice;
                 if (outcome === 'accepted') {
-                    console.log('User menerima instalasi');
+                    showToast('Aplikasi berhasil diinstall!', 'success'); // GANTI NOTIF
                 } else {
-                    console.log('User menolak instalasi');
                     sessionStorage.setItem('installPromptDeclined', 'true');
                 }
                 deferredPrompt = null;
@@ -189,34 +178,7 @@
             sessionStorage.setItem('installPromptDeclined', 'true');
         });
 
-        // 3. Deteksi instalasi selesai & Kirim Push Notification
-        window.addEventListener('appinstalled', () => {
-            console.log('Aplikasi berhasil terinstall!');
-            deferredPrompt = null;
-            installModal.hide(); 
-            
-            if ('Notification' in window && Notification.permission === 'granted') {
-                const notifTitle = "TheraLog Terpasang!";
-                const notifOptions = {
-                    body: "Terima kasih telah menginstall TheraLog. Aplikasi siap digunakan secara offline.",
-                    icon: "favicon-96x96.png", 
-                    badge: "favicon-96x96.png", 
-                    vibrate: [200, 100, 200, 100, 200], 
-                    tag: "install-success-notif" 
-                };
-
-                // Pakai Service Worker buat nampilin native notif
-                if ('serviceWorker' in navigator) {
-                    navigator.serviceWorker.ready.then(registration => {
-                        registration.showNotification(notifTitle, notifOptions);
-                    });
-                } else {
-                    new Notification(notifTitle, notifOptions);
-                }
-            }
-        });
-        // ==========================================
-
+        // HAPUS EVENT appinstalled + showNotification
 
         // ==========================================
         // LOGIKA SWIPER & LOGIN
@@ -246,7 +208,10 @@
             const btn = document.getElementById('btnLogin'); 
             const errorMsg = document.getElementById('errorMsg');
             
-            if(!id) { errorMsg.innerText = "ID tidak boleh kosong"; errorMsg.style.display = 'block'; return; }
+            if(!id) { 
+                showToast("ID tidak boleh kosong", "error"); // GANTI ERROR
+                return; 
+            }
             
             btn.innerText = "Mengecek..."; btn.disabled = true; errorMsg.style.display = 'none';
             try {
@@ -261,12 +226,10 @@
                     document.getElementById('confirmArea').innerText = data.area;
                     loginModal.hide(); setTimeout(() => confirmModal.show(), 300);
                 } else { 
-                    errorMsg.innerText = data.message || "ID tidak terdaftar"; 
-                    errorMsg.style.display = 'block'; 
+                    showToast(data.message || "ID tidak terdaftar", "error"); // GANTI ERROR
                 }
             } catch (err) { 
-                errorMsg.innerText = "Gagal konek ke server"; 
-                errorMsg.style.display = 'block'; 
+                showToast("Gagal konek ke server", "error"); // GANTI ERROR
             }
             btn.innerText = "Cek ID"; btn.disabled = false;
         });
@@ -298,13 +261,11 @@
             errorPIN.style.display = 'none';
 
             if(pin1.length !== 6 || pin2.length !== 6){ 
-                errorPIN.innerText = "PIN harus 6 digit"; 
-                errorPIN.style.display = 'block'; 
+                showToast("PIN harus 6 digit", "error"); // GANTI ERROR
                 return; 
             }
             if(pin1 !== pin2){ 
-                errorPIN.innerText = "PIN tidak sama. Coba lagi"; 
-                errorPIN.style.display = 'block'; 
+                showToast("PIN tidak sama", "error"); // GANTI ERROR
                 return; 
             }
 
@@ -331,48 +292,21 @@
 
             try {
                 await saveTherapist(therapistDataToSave);
-                
                 localStorage.setItem('is_logged_in', 'true');
                 localStorage.setItem('current_user_id', therapistDataToSave.therapist_id);
                 
+                showToast("Registrasi berhasil!", "success"); // TAMBAH SUKSES
                 pinModal.hide();
-                setTimeout(() => { window.location.href = 'index.html'; }, 100);
+                setTimeout(() => { window.location.href = 'index.html'; }, 1200);
             } catch (err) { 
-                alert("Gagal menyimpan PIN: " + err);
+                showToast("Gagal menyimpan PIN: " + err, 'error');
                 console.error(err);
                 btn.disabled = false;
                 btn.innerText = "Simpan PIN";
             }
         });
 
-      // ==========================================
-// HANDLE KLIK PUSH NOTIFICATION
-// ==========================================
-self.addEventListener('notificationclick', function(event) {
-    // 1. Tutup notifikasi setelah di-klik
-    event.notification.close();
-
-    // 2. Tentukan halaman mana yang mau dibuka (misal: halaman utama)
-    const targetUrl = './index.html';
-
-    event.waitUntil(
-        clients.matchAll({ type: 'window', includeUncontrolled: true }).then(function(windowClients) {
-            // Cek apakah aplikasi sudah terbuka di background
-            for (let i = 0; i < windowClients.length; i++) {
-                let client = windowClients[i];
-                // Jika sudah ada, tinggal di-fokuskan (dibawa ke depan)
-                if (client.url.includes('index.html') && 'focus' in client) {
-                    return client.focus();
-                }
-            }
-            // Jika aplikasi belum terbuka sama sekali, buka jendela/aplikasi baru
-            if (clients.openWindow) {
-                return clients.openWindow(targetUrl);
-            }
-        })
-    );
-});
-
     </script>
+
 </body>
 </html>

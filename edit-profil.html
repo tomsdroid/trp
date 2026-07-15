@@ -85,7 +85,8 @@
     </div>
     <div class="loading-overlay" id="loading"><div class="spinner-border text-white mb-2"></div><p>Menyimpan...</p></div>
 
-    <<script src="js/db.js"></script>
+    <script src="js/db.js"></script>
+    <script src="js/script.js"></script>
 <script>
     let currentUserData = null;
     let avatarBase64 = null; // buat nampung foto base64
@@ -114,7 +115,7 @@
     document.getElementById('uploadAvatar').addEventListener('change', function(event) {
         const file = event.target.files[0];
         if (!file) return;
-        if(file.size > 2 * 1024 * 1024){ alert("Ukuran file maksimal 2MB"); this.value = ""; return; }
+        if(file.size > 2 * 1024 * 1024){ showToast("Ukuran file maksimal 2MB", 'error'); this.value = ""; return; }
 
         const reader = new FileReader();
         reader.onload = function(e) {
@@ -148,7 +149,7 @@
 
             await saveTherapist(updatedData); // SIMPAN KE INDEXEDDB INSTAN
 
-            alert('Profil berhasil diperbarui!');
+            showToast('Profil berhasil diperbarui!', 'success');
             window.location.href = 'pengaturan.html';
 
         } catch (err) {

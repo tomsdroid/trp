@@ -20,6 +20,7 @@
         #bottom-nav.nav-item { color: #6c757d!important; }
       .loading-overlay { position: fixed; top:0; left:0; right:0; bottom:0; background: rgba(0,0,0,0.5); z-index: 999; display: none; align-items: center; justify-content: center; color: white; flex-direction: column; }
     </style>
+  <link rel="stylesheet" href="./css/style.css">
 </head>
 <body class="bg-light">
     <div id="app-container">
@@ -105,7 +106,8 @@
     <div class="loading-overlay" id="loading"><div class="spinner-border text-white mb-2"></div><p>Mengimpor...</p></div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="js/db.js"></script>
+    <script src="./js/db.js"></script>
+    <script src="./js/script.js"></script>
     <script>
         if(localStorage.getItem('is_logged_in')!== 'true'){
             window.location.href = './login.html';
@@ -176,18 +178,18 @@
                 }
 
                 if(!userSessions || userSessions.length === 0){
-                    throw new Error(`Data untuk ID "${userId}" tidak ditemukan di file`);
+                    showToast(`Data untuk ID "${userId}" tidak ditemukan di file`, 'error');
                 }
 
                 document.querySelector('#loading p').innerText = `Menyimpan ${userSessions.length} data...`;
                 await saveSessions(userSessions);
                 localStorage.setItem('is_data_imported', 'true');
 
-                alert(`Berhasil import ${userSessions.length} data sesi untuk ID ${userId}!`);
+                showToast(`Berhasil import ${userSessions.length} data sesi untuk ID ${userId}!`, 'success');
                 window.location.reload();
 
             } catch(err) {
-                console.error(err); alert('Gagal import: ' + err.message);
+                console.error(err); showToast('Gagal import: ' + err.message, 'error');
             } finally {
                 document.getElementById('loading').style.display = 'none';
                 e.target.value = "";
