@@ -1,11 +1,27 @@
 // Mendaftarkan Service Worker untuk PWA
-        if ('serviceWorker' in navigator) {
-            window.addEventListener('load', () => {
-                navigator.serviceWorker.register('./sw.js')
-                    .then(reg => console.log('Service Worker berhasil didaftarkan dengan scope:', reg.scope))
-                    .catch(err => console.error('Pendaftaran Service Worker gagal:', err));
-            });
-        }
+if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+        navigator.serviceWorker.register('./sw.js')
+            .then(reg => {
+                console.log('Service Worker berhasil didaftarkan dengan scope:', reg.scope);
+                
+                // 1. Paksa browser ngecek ke server (Vercel) apakah ada sw.js versi baru
+                reg.update();
+                
+                // 2. Kalau ada versi baru yang terdeteksi, lakukan refresh otomatis
+                reg.onupdatefound = () => {
+                    const installingWorker = reg.installing;
+                    installingWorker.onstatechange = () => {
+                        if (installingWorker.state === 'installed' && navigator.serviceWorker.controller) {
+                            console.log('Update PWA tersedia, memuat ulang...');
+                            window.location.reload(); // Refresh halaman agar Not Found hilang
+                        }
+                    };
+                };
+            })
+            .catch(err => console.error('Pendaftaran Service Worker gagal:', err));
+    });
+}
 
 function showToast(message, type = 'success') {
   // hapus toast lama
@@ -64,9 +80,6 @@ async function performSync() {
         const response = await fetch(API_URL, {
             method: "POST",
             body: formData,
-            headers: {
-                "Content-Type": "application/x-www-form-urlencoded"
-            }
         });
 
         const result = await response.json();
