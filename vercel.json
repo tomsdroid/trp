@@ -7,12 +7,12 @@
       "destination": "/app/index.html"
     },
     {
-      "source": "/app/(.*)",
-      "destination": "/app/$1"
+      "source": "/app/:path*",
+      "destination": "/app/:path*"
     },
     {
-      "source": "/(.*)",
-      "destination": "/landing/$1"
+      "source": "/:path*",
+      "destination": "/landing/:path*"
     }
   ]
 }
