@@ -1,4 +1,4 @@
-const CACHE_NAME = "theralog-v2"; // <-- NAIKKAN JADI v2 AGAR HP TERAPIS UPDATE OTOMATIS
+const CACHE_NAME = "theralog-v3"; // <-- NAIKKAN JADI v2 AGAR HP TERAPIS UPDATE OTOMATIS
 const urlsToCache = [
   "./",
   "./onboarding.html",
