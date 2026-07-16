@@ -35,7 +35,7 @@ jobs:
       uses: android-actions/setup-android@v3
 
     - name: Install Cordova
-      run: npm install -g cordova
+      run: npm install -g cordova@12
 
     - name: Copy PWA to Cordova www
       run: |
@@ -45,17 +45,11 @@ jobs:
     - name: Auto Versioning
       id: version
       run: |
-        # Ambil tag terakhir, kalau ga ada mulai dari v1.0.0
         LAST_TAG=$(git describe --tags --abbrev=0 2>/dev/null || echo "v1.0.0")
-        echo "Last tag: $LAST_TAG"
-        
-        # Naikin patch version: v1.0.2 -> v1.0.3
         VERSION=$(echo $LAST_TAG | sed 's/v//')
         IFS='.' read -r MAJOR MINOR PATCH <<< "$VERSION"
         PATCH=$((PATCH + 1))
         NEW_VERSION="v$MAJOR.$MINOR.$PATCH"
-        
-        echo "New version: $NEW_VERSION"
         echo "version=$NEW_VERSION" >> $GITHUB_OUTPUT
 
     - name: Update version in config.xml
@@ -69,7 +63,7 @@ jobs:
       working-directory: ./cordova
       run: |
         cordova platform rm android || true
-        cordova platform add android
+        cordova platform add android@15
         cordova plugin add cordova-plugin-inappbrowser
         cordova plugin add cordova-plugin-splashscreen
 
@@ -77,14 +71,19 @@ jobs:
       env:
         KEYSTORE_BASE64: ${{ secrets.KEYSTORE_BASE64 }}
       run: |
-        echo $KEYSTORE_BASE64 | base64 -d > cordova/keystore.jks
+        echo $KEYSTORE_BASE64 | base64 -d > keystore.jks
 
     - name: Build Release APK
       working-directory: ./cordova
       env:
         STORE_PASS: ${{ secrets.STORE_PASS }}
         KEY_PASS: ${{ secrets.KEY_PASS }}
-      run: npm run build
+      run: |
+        cordova build android --release \
+          --keystore=keystore.jks \
+          --storePassword=$STORE_PASS \
+          --alias=theralogkey \
+          --password=$KEY_PASS
 
     - name: Rename APK with version
       run: mv cordova/platforms/android/app/build/outputs/apk/release/app-release.apk TheraLog-${{ steps.version.outputs.version }}.apk
