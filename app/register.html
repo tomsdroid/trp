@@ -31,7 +31,7 @@
     <div id="app-container">
 
         <div class="header-section">
-            <a href="/app/login.html" class="text-decoration-none" style="color: var(--wondr-blue);"><i class="bi bi-arrow-left"></i> Kembali</a>
+            <a href="./login.html" class="text-decoration-none" style="color: var(--wondr-blue);"><i class="bi bi-arrow-left"></i> Kembali</a>
             <h4 class="fw-bold text-dark mt-3">Buat Akun Baru</h4>
             <p class="text-muted small">Lengkapi data diri untuk memulai.</p>
         </div>
@@ -138,7 +138,7 @@
                 try {
                     await addTherapist(newTherapist);
                     alert('Registrasi Berhasil! Silakan Login');
-                    window.location.href = '/app/login.html';
+                    window.location.href = './login.html';
                 } catch(err){
                     if(err.message.includes('already exists')){
                         alert('ID sudah terdaftar. Coba nama lain');

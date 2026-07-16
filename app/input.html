@@ -23,7 +23,7 @@
     <div id="app-container">
 
         <div class="bg-white pt-4 pb-3 px-3 shadow-sm d-flex align-items-center position-sticky top-0 z-3">
-            <a href="/app/index.html" class="text-dark me-2 mt-1"><i class="bi bi-arrow-left fs-5"></i></a>
+            <a href="./index.html" class="text-dark me-2 mt-1"><i class="bi bi-arrow-left fs-5"></i></a>
             <h5 class="fw-bold mb-0" style="color: #005a70;">Input Data Terapis</h5>
         </div>
 
@@ -128,7 +128,7 @@
 
     document.addEventListener("DOMContentLoaded", function() {
         const userId = localStorage.getItem('current_user_id');
-        if(!userId) { window.location.href = '/app/onboarding.html'; return; }
+        if(!userId) { window.location.href = './onboarding.html'; return; }
 
         const inputId = document.getElementById("inputId");
         const inputDate = document.getElementById("inputDate");
@@ -228,7 +228,7 @@
 
                 // Menunda perpindahan halaman selama 1,5 detik agar toast terbaca
                 setTimeout(() => {
-                    window.location.href = '/app/index.html';
+                    window.location.href = './index.html';
                 }, 1500);
 
             } catch(err){

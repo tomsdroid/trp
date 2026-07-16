@@ -45,11 +45,11 @@
                 <span class="fw-bold text-muted d-block mb-2 ps-1" style="font-size: 0.7rem;">AKUN & KEAMANAN</span>
                 <div class="card border-0 shadow-sm rounded-3 mb-4">
                     <div class="list-group list-group-flush rounded-3">
-                        <a href="/app/edit-profil.html" class="list-group-item p-3 d-flex align-items-center text-dark text-decoration-none">
+                        <a href="./edit-profil.html" class="list-group-item p-3 d-flex align-items-center text-dark text-decoration-none">
                             <div class="bg-light rounded p-2 me-3 d-flex align-items-center justify-content-center" style="width: 32px; height: 32px;"><i class="bi bi-person-gear text-dark"></i></div>
                             <span class="fw-bold flex-grow-1" style="font-size: 0.75rem;">Edit Profil Pribadi</span><i class="bi bi-chevron-right text-muted" style="font-size: 0.8rem;"></i>
                         </a>
-                        <a href="/app/ubah-pin.html" class="list-group-item p-3 d-flex align-items-center text-dark text-decoration-none">
+                        <a href="./ubah-pin.html" class="list-group-item p-3 d-flex align-items-center text-dark text-decoration-none">
                             <div class="bg-light rounded p-2 me-3 d-flex align-items-center justify-content-center" style="width: 32px; height: 32px;"><i class="bi bi-shield-lock text-dark"></i></div>
                             <span class="fw-bold flex-grow-1" style="font-size: 0.75rem;">Ubah PIN / Password</span><i class="bi bi-chevron-right text-muted" style="font-size: 0.8rem;"></i>
                         </a>
@@ -96,10 +96,10 @@
 
         <nav id="bottom-nav" class="navbar fixed-bottom bg-white shadow-lg rounded-top-3" style="z-index: 1030;">
             <div class="container-fluid justify-content-around px-2">
-                <a href="/app/index.html" class="nav-item text-decoration-none text-muted"><i class="bi bi-house-door-fill fs-5 d-block text-center"></i><span class="nav-label">Beranda</span></a>
-                <a href="/app/riwayat.html" class="nav-item text-decoration-none text-muted"><i class="bi bi-clock-history fs-5 d-block text-center"></i><span class="nav-label">Riwayat</span></a>
-                <a href="/app/recap.html" class="nav-item text-decoration-none text-muted"><i class="bi bi-pie-chart-fill fs-5 d-block text-center"></i><span class="nav-label">Rekap</span></a>
-                <a href="/app/pengaturan.html" class="nav-item text-decoration-none active"><i class="bi bi-gear-fill fs-5 d-block text-center"></i><span class="nav-label">Pengaturan</span></a>
+                <a href="./index.html" class="nav-item text-decoration-none text-muted"><i class="bi bi-house-door-fill fs-5 d-block text-center"></i><span class="nav-label">Beranda</span></a>
+                <a href="./riwayat.html" class="nav-item text-decoration-none text-muted"><i class="bi bi-clock-history fs-5 d-block text-center"></i><span class="nav-label">Riwayat</span></a>
+                <a href="./recap.html" class="nav-item text-decoration-none text-muted"><i class="bi bi-pie-chart-fill fs-5 d-block text-center"></i><span class="nav-label">Rekap</span></a>
+                <a href="./pengaturan.html" class="nav-item text-decoration-none active"><i class="bi bi-gear-fill fs-5 d-block text-center"></i><span class="nav-label">Pengaturan</span></a>
             </div>
         </nav>
 
@@ -169,7 +169,7 @@
         const userId = localStorage.getItem('current_user_id');
 
         document.addEventListener("DOMContentLoaded", async function() {
-            if(!userId){ window.location.href = '/app/index.html'; return; }
+            if(!userId){ window.location.href = './index.html'; return; }
 
             try { appInfo = await (await fetch('app-info.json')).json(); } catch(err) {}
 
@@ -281,8 +281,8 @@
             document.getElementById('tentangPopup').classList.remove('d-flex');
         }
 
-        function openPrivacy() { window.location.href = '/app/kebijakan-privasi.html'; }
-        function openTnC() { window.location.href = '/app/syarat-ketentuan.html'; }
+        function openPrivacy() { window.location.href = './kebijakan-privasi.html'; }
+        function openTnC() { window.location.href = './syarat-ketentuan.html'; }
 
         function showBantuan() { document.getElementById('bantuanPopup').classList.remove('d-none'); document.getElementById('bantuanPopup').classList.add('d-flex'); }
         function closeBantuan() { document.getElementById('bantuanPopup').classList.add('d-none'); document.getElementById('bantuanPopup').classList.remove('d-flex'); }
@@ -291,7 +291,7 @@
             if(confirm("Apakah Anda yakin ingin keluar?")) { 
                 localStorage.setItem('is_logged_in', 'false'); 
                 showToast("Berhasil keluar", "success"); 
-                setTimeout(() => { window.location.href = '/app/login.html'; }, 800); 
+                setTimeout(() => { window.location.href = './login.html'; }, 800); 
             } 
         }
         
