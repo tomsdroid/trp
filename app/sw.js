@@ -1,4 +1,4 @@
-const CACHE_NAME = "theralog-v1";
+const CACHE_NAME = "theralog-v2";
 const urlsToCache = [
   "./",
   "./onboarding.html",

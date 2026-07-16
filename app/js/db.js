@@ -4,7 +4,7 @@ const STORE_THERAPIST = "therapists";
 const STORE_SESSION = "sessions";
 const STORE_SERVICES = "services";
 
-const DEFAULT_SERVICES = [ // INI YANG KURANG
+const DEFAULT_SERVICES = [
     { id: "JM60", name: "Javanese Massage 60", price: 200000 },
     { id: "JM61", name: "Javanese Massage 61", price: 200000 }
 ];
@@ -23,6 +23,7 @@ function openDB() {
                 const sessionStore = db.createObjectStore(STORE_SESSION, { keyPath: "id" });
                 sessionStore.createIndex("therapistID", "therapistID", { unique: false });
                 sessionStore.createIndex("timestamp", "timestamp", { unique: false });
+                // Index is_synced opsional, tapi filter manual sudah cukup untuk skala kecil
             }
             if (!db.objectStoreNames.contains(STORE_SERVICES)) {
                 db.createObjectStore(STORE_SERVICES, { keyPath: "id" });
@@ -50,7 +51,7 @@ async function loadServices() {
         const db2 = await openDB();
         const tx2 = db2.transaction(STORE_SERVICES, "readwrite");
         services.forEach(s => {
-            s.id = s.id || `SVC_${Math.random().toString(36).substr(2,9)}`; // jaga2 kalau ga ada id
+            s.id = s.id || `SVC_${Math.random().toString(36).substr(2,9)}`;
             tx2.objectStore(STORE_SERVICES).put(s);
         });
         await tx2.done;
@@ -98,35 +99,38 @@ async function getTherapist(id) {
     });
 }
 
-// ===== SESSIONS - UDAH BISA TERIMA ARRAY =====
-async function saveSession(session) { // save 1
+// ===== SESSIONS =====
+async function saveSession(session) { 
     const db = await openDB();
     return new Promise((resolve, reject) => {
         const tx = db.transaction(STORE_SESSION, "readwrite");
+        // Beri flag belum sinkron (0) jika belum ada statusnya
+        session.is_synced = session.is_synced !== undefined ? session.is_synced : 0;
         tx.objectStore(STORE_SESSION).put(session);
         tx.oncomplete = () => { db.close(); resolve(); };
         tx.onerror = (e) => { db.close(); reject(e.target.error); };
     });
 }
 
-async function saveSessions(sessionsArray) { // save banyak - INI YANG DIPAKE IMPORT
+async function saveSessions(sessionsArray) {
     const db = await openDB();
     return new Promise((resolve, reject) => {
         const tx = db.transaction(STORE_SESSION, "readwrite");
         const store = tx.objectStore(STORE_SESSION);
         sessionsArray.forEach(s => {
-            // MAPPING BIAR COCOK SAMA DB BARU
             const newS = {
                 id: s.id,
                 therapistID: s.therapistID,
-                therapistName: s.therapistPanggilan,
+                therapistName: s.therapistPanggilan || s.therapistName,
                 kode: s.kode,
                 produk: s.produk,
                 kategori: s.kategori,
                 lokasi: s.lokasi,
                 durasi: s.durasi,
                 waktu: s.waktu,
-                timestamp: s.timestamp
+                timestamp: s.timestamp,
+                // Penanda data belum sinkron (0 = Belum, 1 = Sudah)
+                is_synced: s.is_synced !== undefined ? s.is_synced : 0
             };
             store.put(newS);
         });
@@ -146,10 +150,40 @@ async function getSessionsByTherapist(therapistID) {
     });
 }
 
-async function getLastSessions(therapistID, limit = 5) { // INI YANG KURANG
+async function getLastSessions(therapistID, limit = 5) {
     const all = await getSessionsByTherapist(therapistID);
     return all.sort((a,b) => b.timestamp - a.timestamp).slice(0, limit);
 }
+
+
+// ==========================================
+// FITUR BARU: MANAJEMEN SINKRONISASI
+// ==========================================
+
+// Mengambil log yang belum disinkronisasi
+async function getUnsyncedSessions(therapistID) {
+    const allSessions = await getSessionsByTherapist(therapistID);
+    // Kembalikan hanya yang is_synced nya 0 atau undefined
+    return allSessions.filter(session => !session.is_synced);
+}
+
+// Menandai log sebagai sudah tersinkronisasi
+async function markSessionsAsSynced(sessionsArray) {
+    const db = await openDB();
+    return new Promise((resolve, reject) => {
+        const tx = db.transaction(STORE_SESSION, "readwrite");
+        const store = tx.objectStore(STORE_SESSION);
+        
+        sessionsArray.forEach(session => {
+            session.is_synced = 1; // 1 = Sudah disinkronkan ke Google Sheet
+            store.put(session);
+        });
+        
+        tx.oncomplete = () => { db.close(); resolve(); };
+        tx.onerror = (e) => { db.close(); reject(e.target.error); };
+    });
+}
+
 
 // ===== AVATAR =====
 const saveAvatar = (id, base64) => localStorage.setItem(`avatar_${id}`, base64);

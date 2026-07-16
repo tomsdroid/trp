@@ -17,9 +17,7 @@
         .animation-scale-up { animation: scaleUp 0.2s ease-out forwards; }
         @keyframes scaleUp { from { transform: scale(0.8); opacity: 0; } to { transform: scale(1); opacity: 1; } }
         .avatar-img { width: 100%; height: 100%; object-fit: cover; border-radius: 1rem; }
-        #bottom-nav .nav-item { font-size: 0.65rem; text-align: center; padding: 8px 0; }
-        #bottom-nav .nav-item.active { color: #005a70 !important; }
-        #bottom-nav .nav-item { color: #6c757d !important; }
+        
         .social-link { width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; border-radius: 50%; background: #f8f9fa; color: #005a70; text-decoration: none; transition: 0.2s; }
         .social-link:active { transform: scale(0.9); background: #e9ecef; }
         .sync-status { font-size: 0.65rem; color: #6c757d; }
@@ -33,7 +31,6 @@
         </div>
 
         <section class="pb-5 pt-2">
-            <!-- Profil Singkat -->
             <div class="container-fluid px-3 text-center mt-2 mb-4">
                 <div onclick="showAvatarZoom()" class="bg-white rounded-4 d-inline-flex align-items-center justify-content-center shadow-sm mb-2" style="width: 80px; height: 80px; cursor: pointer; border: 1px solid #eee; overflow: hidden;">
                     <img id="avatarPreview" src="#" class="avatar-img" style="display:none;">
@@ -44,7 +41,6 @@
                 <p id="profileID" class="fw-bold mt-1" style="color: #f78c22; font-size: 0.7rem;">ID: -</p>
             </div>
 
-            <!-- Menu Pengaturan -->
             <div class="container-fluid px-3 mb-5">
                 <span class="fw-bold text-muted d-block mb-2 ps-1" style="font-size: 0.7rem;">AKUN & KEAMANAN</span>
                 <div class="card border-0 shadow-sm rounded-3 mb-4">
@@ -67,7 +63,6 @@
                 <span class="fw-bold text-muted d-block mb-2 ps-1" style="font-size: 0.7rem;">SISTEM & INFO</span>
                 <div class="card border-0 shadow-sm rounded-3 mb-4">
                     <div class="list-group list-group-flush rounded-3">
-                        <!-- SINKRONISASI -->
                         <a href="#" class="list-group-item p-3 d-flex align-items-center text-dark text-decoration-none" onclick="showSyncStatus()">
                             <div class="bg-light rounded p-2 me-3 d-flex align-items-center justify-content-center" style="width: 32px; height: 32px;"><i class="bi bi-cloud-check text-dark"></i></div>
                             <div class="flex-grow-1 d-flex justify-content-between align-items-center">
@@ -75,10 +70,9 @@
                                     <span class="fw-bold d-block" style="font-size: 0.75rem;">Sinkronisasi</span>
                                     <span class="sync-status text-muted d-block" style="font-size: 0.65rem;">Terakhir Sinkron: <span id="lastSyncText">Belum pernah</span></span>
                                 </div>
-                                <span class="badge rounded-pill fw-normal" style="background-color: #76ded4; color: #005a70; font-size: 0.65rem;">Otomatis</span>
+                                <span class="badge rounded-pill fw-normal" style="background-color: #76ded4; color: #005a70; font-size: 0.65rem;">Manual & Auto</span>
                             </div>
                         </a>
-                        <!-- TENTANG APLIKASI -->
                         <a href="#" class="list-group-item p-3 d-flex align-items-center text-dark text-decoration-none" onclick="showTentangApp()">
                             <div class="bg-light rounded p-2 me-3 d-flex align-items-center justify-content-center" style="width: 32px; height: 32px;"><i class="bi bi-info-circle text-dark"></i></div>
                             <span class="fw-bold flex-grow-1" style="font-size: 0.75rem;">Tentang Aplikasi</span><i class="bi bi-chevron-right text-muted" style="font-size: 0.8rem;"></i>
@@ -87,7 +81,6 @@
                             <div class="bg-light rounded p-2 me-3 d-flex align-items-center justify-content-center" style="width: 32px; height: 32px;"><i class="bi bi-shield-check text-dark"></i></div>
                             <span class="fw-bold flex-grow-1" style="font-size: 0.75rem;">Kebijakan Privasi</span><i class="bi bi-box-arrow-up-right text-muted" style="font-size: 0.8rem;"></i>
                         </a>
-                        <!-- SYARAT & KETENTUAN -->
                         <a href="#" class="list-group-item p-3 d-flex align-items-center text-dark text-decoration-none" onclick="openTnC()">
                             <div class="bg-light rounded p-2 me-3 d-flex align-items-center justify-content-center" style="width: 32px; height: 32px;"><i class="bi bi-file-earmark-text text-dark"></i></div>
                             <span class="fw-bold flex-grow-1" style="font-size: 0.75rem;">Syarat & Ketentuan</span><i class="bi bi-box-arrow-up-right text-muted" style="font-size: 0.8rem;"></i>
@@ -101,7 +94,6 @@
             </div>
         </section>
 
-        <!-- Navigasi Bawah -->
         <nav id="bottom-nav" class="navbar fixed-bottom bg-white shadow-lg rounded-top-3" style="z-index: 1030;">
             <div class="container-fluid justify-content-around px-2">
                 <a href="index.html" class="nav-item text-decoration-none text-muted"><i class="bi bi-house-door-fill fs-5 d-block text-center"></i><span class="nav-label">Beranda</span></a>
@@ -112,19 +104,23 @@
         </nav>
 
 
-        <!-- POPUP STATUS SINKRON (Versi Coming Soon) -->
         <div id="syncPopup" class="position-fixed top-0 start-0 w-100 h-100 bg-dark bg-opacity-50 d-none flex-column justify-content-center align-items-center px-4" style="backdrop-filter: blur(2px); z-index: 1050;" onclick="closeSync()">
-            <div class="bg-white w-100 rounded-4 p-4 text-center shadow animation-scale-up" onclick="event.stopPropagation()">
-                <div class="mb-3 mt-2">
-                    <i class="bi bi-cone-striped text-warning" style="font-size: 3.5rem;"></i>
-                </div>
-                <h6 class="fw-bold text-dark mb-2">Pembaruan Mendatang</h6>
-                <p class="small text-muted mb-4" style="line-height: 1.5;">Fitur sinkronisasi otomatis dan manual sedang dalam tahap pengembangan dan akan segera tiba di <i>update</i> selanjutnya.</p>
-                <button class="btn btn-light w-100 rounded-pill py-2 fw-bold text-dark" style="font-size: 0.8rem; background-color: #f8f9fa; border: 1px solid #dee2e6;" onclick="closeSync()">Tutup</button>
+            <div class="bg-white w-100 rounded-4 p-4 shadow animation-scale-up" onclick="event.stopPropagation()">
+                <h6 class="fw-bold text-dark mb-3"><i class="bi bi-cloud-check me-2" style="color: var(--primary-color);"></i>Status Sinkronisasi</h6>
+                <p class="small text-muted mb-1">Terakhir sinkron:</p>
+                <p id="lastSyncDetail" class="fw-bold mb-3">-</p>
+                <p class="small text-muted mb-1">Log belum terkirim:</p>
+                <p id="localDataCount" class="fw-bold mb-4" style="color: #f78c22;">0 log</p>
+                
+                <button id="btnSyncNow" class="btn w-100 rounded-pill py-2 fw-bold text-white shadow-sm mb-2" style="background-color: #005a70; font-size: 0.8rem;" onclick="manualSync()">
+                    Sinkronkan Sekarang
+                </button>
+                <button class="btn btn-light w-100 rounded-pill py-2 fw-bold" style="font-size: 0.8rem;" onclick="closeSync()">
+                    Tutup
+                </button>
             </div>
         </div>
 
-        <!-- POPUP TENTANG APLIKASI -->
         <div id="tentangPopup" class="position-fixed top-0 start-0 w-100 h-100 bg-dark bg-opacity-50 d-none flex-column justify-content-center align-items-center px-4" style="backdrop-filter: blur(2px); z-index: 1050;" onclick="closeTentang()">
             <div id="tentangContent" class="bg-white w-100 rounded-4 p-4 text-center shadow animation-scale-up" style="max-height: 90vh; overflow-y: auto;" onclick="event.stopPropagation()">
                 <img src="favicon-96x96.png" width="60" height="60" class="mb-3 rounded-4 shadow-sm">
@@ -140,7 +136,6 @@
             </div>
         </div>
 
-        <!-- POPUP BANTUAN -->
         <div id="bantuanPopup" class="position-fixed top-0 start-0 w-100 h-100 bg-dark bg-opacity-50 d-none flex-column justify-content-center align-items-center px-4" style="backdrop-filter: blur(2px); z-index: 1050;" onclick="closeBantuan()">
             <div class="bg-white w-100 rounded-4 p-4 shadow animation-scale-up" onclick="event.stopPropagation()">
                 <h6 class="fw-bold text-dark mb-3"><i class="bi bi-question-circle me-2"></i>Pusat Bantuan</h6>
@@ -153,7 +148,6 @@
             </div>
         </div>
 
-        <!-- AVATAR ZOOM MODAL -->
         <div id="avatarModal" class="position-fixed top-0 start-0 w-100 h-100 bg-dark bg-opacity-75 d-none flex-column justify-content-center align-items-center" style="backdrop-filter: blur(3px); z-index: 1050;" onclick="closeAvatarZoom()">
             <div id="avatarContent" class="animation-scale-up text-center">
                 <div class="bg-white rounded-4 d-inline-flex align-items-center justify-content-center shadow-lg" style="width: 250px; height: 250px; overflow: hidden;">
@@ -165,7 +159,6 @@
             </div>
         </div>
 
-        <!-- Custom Toast Container -->
         <div id="customToast" class="position-fixed p-3 bottom-0 end-0" style="z-index: 9999; display: none; padding-bottom: 80px !important;">
             <div class="toast show align-items-center text-white border-0 shadow-lg" style="background-color: #005a70; border-radius: 12px;" role="alert" aria-live="assertive" aria-atomic="true">
                 <div class="d-flex">
@@ -179,7 +172,6 @@
 
     </div>
 
-    <!-- Scripts -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="js/db.js"></script>
     <script src="js/script.js"></script>
@@ -207,41 +199,84 @@
                         document.getElementById('avatarIcon').style.display = 'none';
                     }
                 }
-            } catch(err){ showToast("Gagal memuat data", "error"); }
+            } catch(err){ showToast("Gagal memuat profil terapis", "error"); }
             
             updateSyncStatus();
         });
 
-        function showToast(msg, type = "success") {
-            const toastContainer = document.getElementById('customToast');
-            const toastIcon = document.getElementById('toastIcon');
-            const toast = toastContainer.querySelector('.toast');
+        // ==========================================
+        // FUNGSI SINKRONISASI MANUAL & UI UPDATE
+        // ==========================================
+        
+        async function updateSyncStatus() {
+            const lastSync = localStorage.getItem('last_sync');
+            const syncText = lastSync ? new Date(lastSync).toLocaleString('id-ID') : 'Belum pernah';
             
-            document.getElementById('toastMsg').innerText = msg;
-            
-            if (type === "success") {
-                toast.style.backgroundColor = "#005a70";
-                toastIcon.className = "bi bi-check-circle-fill me-2 fs-5";
-            } else if (type === "error") {
-                toast.style.backgroundColor = "#dc3545";
-                toastIcon.className = "bi bi-exclamation-triangle-fill me-2 fs-5";
-            } else {
-                toast.style.backgroundColor = "#6c757d";
-                toastIcon.className = "bi bi-info-circle-fill me-2 fs-5";
-            }
+            // Update teks di menu list dan di dalam popup
+            document.getElementById('lastSyncText').innerText = syncText;
+            document.getElementById('lastSyncDetail').innerText = syncText;
 
-            toastContainer.style.display = 'block';
-            setTimeout(() => { toastContainer.style.display = 'none'; }, 3500);
+            try {
+                // Mengambil jumlah log yang belum sinkron dari db.js
+                const unsyncedSessions = await getUnsyncedSessions(userId);
+                const count = unsyncedSessions.length;
+                
+                document.getElementById('localDataCount').innerText = `${count} log`;
+                
+                const btnSync = document.getElementById('btnSyncNow');
+                if(count === 0) {
+                    btnSync.disabled = true;
+                    btnSync.style.backgroundColor = "#6c757d"; // warna abu-abu
+                    btnSync.innerText = "Data Sudah Tersinkron";
+                } else {
+                    btnSync.disabled = false;
+                    btnSync.style.backgroundColor = "#005a70"; // warna biru utama
+                    btnSync.innerText = "Sinkronkan Sekarang";
+                }
+            } catch (err) {
+                console.error("Gagal mengecek data sinkronisasi:", err);
+                document.getElementById('localDataCount').innerText = "Gagal memuat";
+            }
         }
 
-        // 1. STATUS SINKRONISASI (Versi Coming Soon)
-        function updateSyncStatus() {
-            const lastSync = localStorage.getItem('last_sync');
-            // Hanya update teks di menu list
-            document.getElementById('lastSyncText').innerText = lastSync ? new Date(lastSync).toLocaleString('id-ID') : 'Belum pernah';
+        async function manualSync() {
+            if (!navigator.onLine) {
+                showToast("Anda sedang offline. Pastikan koneksi internet menyala.", "error");
+                return;
+            }
+
+            const btnSync = document.getElementById('btnSyncNow');
+            
+            // Ubah UI tombol menjadi state loading
+            btnSync.disabled = true;
+            btnSync.innerHTML = '<span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>Menyinkronkan...';
+
+            try {
+                // Memanggil performSync() yang ada di script.js
+                if (typeof performSync === 'function') {
+                    await performSync();
+                    
+                    // Setelah selesai, update status UI
+                    await updateSyncStatus();
+                    
+                    // Tutup popup otomatis setelah sukses
+                    setTimeout(() => {
+                        closeSync();
+                    }, 1500);
+                } else {
+                    showToast("Fungsi sinkronisasi gagal dimuat.", "error");
+                    btnSync.disabled = false;
+                    btnSync.innerText = "Sinkronkan Sekarang";
+                }
+            } catch (err) {
+                console.error(err);
+                btnSync.disabled = false;
+                btnSync.innerText = "Sinkronkan Sekarang";
+            }
         }
 
         function showSyncStatus() {
+            updateSyncStatus(); // Perbarui angka terbaru setiap kali popup dibuka
             document.getElementById('syncPopup').classList.remove('d-none');
             document.getElementById('syncPopup').classList.add('d-flex');
         }
@@ -250,6 +285,10 @@
             document.getElementById('syncPopup').classList.add('d-none');
             document.getElementById('syncPopup').classList.remove('d-flex');
         }
+
+        // ==========================================
+        // LAINNYA
+        // ==========================================
 
         async function showTentangApp() {
             if(!appInfo) { showToast("Gagal memuat data aplikasi", "error"); return; }
@@ -274,7 +313,14 @@
 
         function showBantuan() { document.getElementById('bantuanPopup').classList.remove('d-none'); document.getElementById('bantuanPopup').classList.add('d-flex'); }
         function closeBantuan() { document.getElementById('bantuanPopup').classList.add('d-none'); document.getElementById('bantuanPopup').classList.remove('d-flex'); }
-        function showLogoutAlert() { if(confirm("Apakah Anda yakin ingin keluar?")){ localStorage.setItem('is_logged_in', 'false'); showToast("Berhasil keluar", "success"); setTimeout(() => { window.location.href = 'login.html'; }, 800); } }
+        
+        function showLogoutAlert() { 
+            if(confirm("Apakah Anda yakin ingin keluar?")) { 
+                localStorage.setItem('is_logged_in', 'false'); 
+                showToast("Berhasil keluar", "success"); 
+                setTimeout(() => { window.location.href = 'login.html'; }, 800); 
+            } 
+        }
         
         function showAvatarZoom() {
             const avatarSrc = document.getElementById('avatarPreview').src;
