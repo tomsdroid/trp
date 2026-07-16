@@ -144,10 +144,7 @@
     <script src="js/script.js"></script> <!-- IMPORT showToast -->
     <script>
         const API_URL = "https://script.google.com/macros/s/AKfycbx3hQszNy0HxAy96zI1gpg5htfpHAYbyr9uCaK7XtD-IKhG64uZvFMmf1E6CvwstaaP/exec"; 
-        
-        // ==========================================
-        // LOGIKA INSTALL PWA - UDAH HAPUS NOTIF NATIVE
-        // ==========================================
+      
         let deferredPrompt;
         const installModal = new bootstrap.Modal(document.getElementById('installModal'));
         const btnInstallApp = document.getElementById('btnInstallApp');
@@ -178,11 +175,6 @@
             sessionStorage.setItem('installPromptDeclined', 'true');
         });
 
-        // HAPUS EVENT appinstalled + showNotification
-
-        // ==========================================
-        // LOGIKA SWIPER & LOGIN
-        // ==========================================
         const swiper = new Swiper(".mySwiper", { pagination: { el: ".swiper-pagination", clickable: true } });
         const btnNext = document.getElementById('btnNext');
         const btnStart = document.getElementById('btnStart');
