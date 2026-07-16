@@ -5,20 +5,8 @@
       "destination": "/app/index.html"
     },
     {
-      "source": "/app/:path([^.]+)",
-      "destination": "/app/:path.html"
-    },
-    {
       "source": "/app/(.*)",
       "destination": "/app/$1"
-    },
-    {
-      "source": "/",
-      "destination": "/landing/index.html"
-    },
-    {
-      "source": "/:path([^.]+)",
-      "destination": "/landing/:path.html"
     },
     {
       "source": "/(.*)",
