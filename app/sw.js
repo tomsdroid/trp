@@ -39,11 +39,22 @@ self.addEventListener("install", event => {
 });
 
 self.addEventListener("fetch", event => {
+  // 1. JANGAN ikut campur kalau ini request POST (seperti kirim data ke API)
+  if (event.request.method !== 'GET') {
+    return; // Biarkan browser mengurusnya langsung tanpa cache
+  }
+
+  // 2. JANGAN ikut campur kalau request mengarah ke Google Apps Script / API luar
+  if (event.request.url.includes("script.google.com") || event.request.url.includes("api.github.com")) {
+    return;
+  }
+
+  // 3. Sisanya (HTML, CSS, JS), jalankan dari Cache PWA
   event.respondWith(
     caches.match(event.request).then(response => {
       return response || fetch(event.request).catch(() => {
         if(event.request.destination === 'document'){
-          return caches.match('./onboarding.html');
+          return caches.match('/app/onboarding.html');
         }
       });
     })
