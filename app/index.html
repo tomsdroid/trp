@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <meta http-equiv="Content-Security-Policy" content="default-src 'self' data: gap: https://ssl.gstatic.com 'unsafe-eval' 'unsafe-inline' https://script.google.com https://cdn.jsdelivr.net; font-src 'self' data: https://cdn.jsdelivr.net;">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self' data: gap: https://ssl.gstatic.com 'unsafe-eval' 'unsafe-inline' https://script.google.com https://cdn.jsdelivr.net; font-src 'self' data: https://cdn.jsdelivr.net;">
     <title>Beranda - TheraLog</title>
     <!-- PWA -->
     <link rel="manifest" href="manifest.json">
@@ -13,13 +13,13 @@
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
-<link rel="icon" type="image/png" href="favicon-96x96.png">
+    <link rel="icon" type="image/png" href="favicon-96x96.png">
     <style>
       .avatar-img-nav { width: 100%; height: 100%; object-fit: cover; border-radius: 50%; }
         
       .loading-overlay { position: fixed; top:0; left:0; right:0; bottom:0; background: rgba(0,0,0,0.5); z-index: 999; display: none; align-items: center; justify-content: center; color: white; flex-direction: column; }
     </style>
-  <link rel="stylesheet" href="./css/style.css">
+    <link rel="stylesheet" href="./css/style.css">
 </head>
 <body class="bg-light">
     <div id="app-container">
@@ -104,7 +104,23 @@
 
     <div class="loading-overlay" id="loading"><div class="spinner-border text-white mb-2"></div><p>Mengimpor...</p></div>
 
-      <!-- UI POPUP UPDATE TERSIMPAN DI BAWAH -->
+    <!-- UI POPUP INSTALL APP (MUNCUL DI ATAS) -->
+    <div id="installPopup" class="position-fixed top-0 start-50 translate-middle-x mt-3 p-3 w-100" style="max-width: 400px; display: none; z-index: 9999;">
+        <div class="card shadow-lg border-0 rounded-4" style="background: linear-gradient(135deg, #f78c22 0%, #fa9e44 100%);">
+            <div class="card-body p-3 d-flex justify-content-between align-items-center">
+                <div class="text-white me-2">
+                    <h6 class="fw-bold mb-1"><i class="bi bi-phone-vibrate me-2"></i>Install Aplikasi</h6>
+                    <p class="mb-0" style="font-size: 0.7rem;">Pasang di layar utama untuk akses cepat.</p>
+                </div>
+                <div class="d-flex flex-column gap-1">
+                    <button id="btnInstallApp" class="btn btn-sm btn-light fw-bold rounded-pill px-3 shadow-sm" style="font-size: 0.7rem; color: #f78c22;">Install</button>
+                    <button id="btnTutupInstall" class="btn btn-sm text-white rounded-pill px-3" style="font-size: 0.65rem; text-decoration: underline;">Nanti saja</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- UI POPUP UPDATE (MUNCUL DI BAWAH) -->
     <div id="updatePopup" class="position-fixed bottom-0 start-50 translate-middle-x mb-5 p-3 w-100" style="max-width: 400px; display: none; z-index: 9999;">
         <div class="card shadow-lg border-0 rounded-4" style="background: linear-gradient(135deg, #005a70, #0087a3);">
             <div class="card-body p-3 d-flex justify-content-between align-items-center">
@@ -121,7 +137,45 @@
     <script src="./js/db.js"></script>
     <script src="./js/script.js"></script>
     <script>
-        // LOGIKA MENDETEKSI UPDATE DAN MEMUNCULKAN POPUP
+        // ==========================================
+        // 1. LOGIKA MENDETEKSI & INSTALL PWA (A2HS)
+        // ==========================================
+        let deferredPrompt;
+        const installPopup = document.getElementById('installPopup');
+        const btnInstallApp = document.getElementById('btnInstallApp');
+        const btnTutupInstall = document.getElementById('btnTutupInstall');
+
+        // Menangkap event dari browser jika PWA siap di-install
+        window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault(); // Cegah prompt default browser
+            deferredPrompt = e; // Simpan event-nya
+            installPopup.style.display = 'block'; // Tampilkan popup cantik kita
+        });
+
+        // Aksi jika tombol "Install" ditekan
+        btnInstallApp.addEventListener('click', async () => {
+            installPopup.style.display = 'none'; // Sembunyikan popup
+            if (deferredPrompt) {
+                deferredPrompt.prompt(); // Munculkan dialog bawaan HP
+                const { outcome } = await deferredPrompt.userChoice;
+                if (outcome === 'accepted') {
+                    console.log('User menerima instalasi PWA');
+                } else {
+                    console.log('User menolak instalasi PWA');
+                }
+                deferredPrompt = null; // Kosongkan event setelah dipakai
+            }
+        });
+
+        // Aksi jika tombol "Nanti saja" ditekan
+        btnTutupInstall.addEventListener('click', () => {
+            installPopup.style.display = 'none';
+        });
+
+
+        // ==========================================
+        // 2. LOGIKA MENDETEKSI UPDATE CACHE SW
+        // ==========================================
         let newWorker;
         const updatePopup = document.getElementById('updatePopup');
         const btnUpdateApp = document.getElementById('btnUpdateApp');
@@ -131,25 +185,20 @@
                 reg.addEventListener('updatefound', () => {
                     newWorker = reg.installing;
                     newWorker.addEventListener('statechange', () => {
-                        // Jika SW baru selesai didownload dan menunggu di latar belakang
                         if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
-                            // Tampilkan Popup!
                             updatePopup.style.display = 'block';
                         }
                     });
                 });
             });
 
-            // Aksi saat terapis menekan tombol "Update" di Popup
             btnUpdateApp.addEventListener('click', () => {
                 updatePopup.style.display = 'none';
-                // Kirim pesan ke SW untuk segera menimpa cache lama
                 if (newWorker) {
                     newWorker.postMessage({ action: 'skipWaiting' });
                 }
             });
 
-            // Saat SW baru mengambil alih, refresh halaman otomatis agar desain baru muncul
             let refreshing;
             navigator.serviceWorker.addEventListener('controllerchange', () => {
                 if (refreshing) return;
@@ -158,6 +207,9 @@
             });
         }
 
+        // ==========================================
+        // 3. LOGIKA RENDER HALAMAN (LOAD DATA)
+        // ==========================================
         if(localStorage.getItem('is_logged_in')!== 'true'){
             window.location.href = './login.html';
         }

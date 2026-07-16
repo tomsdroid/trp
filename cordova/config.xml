@@ -10,7 +10,6 @@
     
     <content src="index.html" />
     
-    <!-- MENGIZINKAN AKSES KE API LUAR (GOOGLE APPS SCRIPT) -->
     <access origin="*" />
     
     <allow-intent href="http://*/*" />
@@ -20,11 +19,12 @@
     <allow-intent href="mailto:*" />
     <allow-intent href="geo:*" />
 
-    <!-- KONFIGURASI KHUSUS ANDROID -->
+    <icon src="res/icon.png" />
+
     <platform name="android">
         <preference name="android-minSdkVersion" value="22" />
         <preference name="android-targetSdkVersion" value="33" />
-        <!-- Jika nanti kamu punya icon, tambahkan di sini -->
-        <!-- <icon density="ldpi" src="res/icon/android/ldpi.png" /> -->
+        <preference name="AndroidWindowSplashScreenAnimatedIcon" value="res/icon.png" />
+        <preference name="AndroidWindowSplashScreenBackground" value="#005a70" />
     </platform>
 </widget>

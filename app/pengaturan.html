@@ -52,7 +52,11 @@
                         <a href="./ubah-pin.html" class="list-group-item p-3 d-flex align-items-center text-dark text-decoration-none">
                             <div class="bg-light rounded p-2 me-3 d-flex align-items-center justify-content-center" style="width: 32px; height: 32px;"><i class="bi bi-shield-lock text-dark"></i></div>
                             <span class="fw-bold flex-grow-1" style="font-size: 0.75rem;">Ubah PIN / Password</span><i class="bi bi-chevron-right text-muted" style="font-size: 0.8rem;"></i>
-                        </a>
+                        <!-- </a>
+                        <a href="#" class="list-group-item p-3 d-flex align-items-center text-dark text-decoration-none" onclick="setupBiometric()">
+                            <div class="bg-light rounded p-2 me-3 d-flex align-items-center justify-content-center" style="width: 32px; height: 32px;"><i class="bi bi-fingerprint text-dark"></i></div>
+                            <span class="fw-bold flex-grow-1" style="font-size: 0.75rem;">Aktifkan Sidik Jari</span><i class="bi bi-chevron-right text-muted" style="font-size: 0.8rem;"></i>
+                        </a> -->
                         <a href="#" class="list-group-item p-3 d-flex align-items-center text-dark text-decoration-none" onclick="showBantuan()">
                             <div class="bg-light rounded p-2 me-3 d-flex align-items-center justify-content-center" style="width: 32px; height: 32px;"><i class="bi bi-question-circle text-dark"></i></div>
                             <span class="fw-bold flex-grow-1" style="font-size: 0.75rem;">Bantuan</span><i class="bi bi-chevron-right text-muted" style="font-size: 0.8rem;"></i>
@@ -249,6 +253,30 @@
                 console.error(err);
                 btnSync.disabled = false;
                 btnSync.innerText = "Sinkronkan Sekarang";
+            }
+        }
+
+        function setupBiometric() {
+            if (window.cordova && window.Fingerprint) {
+                Fingerprint.isAvailable(
+                    function() {
+                        Fingerprint.show({
+                            title: "Aktifkan Biometrik",
+                            subtitle: "TheraLog App",
+                            description: "Scan sidik jari Anda untuk mengaktifkan fitur ini"
+                        }, function() {
+                            localStorage.setItem(`bio_enabled_${userId}`, 'true');
+                            showToast("Login Biometrik berhasil diaktifkan!", "success");
+                        }, function() {
+                            showToast("Dibatalkan mengatur biometrik", "error");
+                        });
+                    },
+                    function() {
+                        showToast("Perangkat tidak mendukung biometrik", "error");
+                    }
+                );
+            } else {
+                showToast("Fitur Sidik Jari / Face ID hanya berlaku untuk Aplikasi Android.", "warning");
             }
         }
 

@@ -6,7 +6,6 @@
     <meta name="theme-color" content="#005a70">
     <title>Login - TheraLog</title>
     
-    <!-- PWA -->
     <link rel="manifest" href="manifest.json">
     <link rel="apple-touch-icon" href="apple-touch-icon.png">
     <meta name="apple-mobile-web-app-capable" content="yes">
@@ -33,14 +32,6 @@
         
         .bio-btn { background: #f0f7f9; color: var(--wondr-blue); width: 60px; height: 60px; border-radius: 20px; display: flex; align-items: center; justify-content: center; transition: 0.2s; border: none; }
         .bio-btn:active { transform: scale(0.95); }
-        
-        /* Animasi Popup Biometrik */
-        .animation-scale-up { animation: scaleUp 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; }
-        @keyframes scaleUp { from { transform: scale(0.8); opacity: 0; } to { transform: scale(1); opacity: 1; } }
-        .animation-scale-down { animation: scaleDown 0.2s ease-in forwards; }
-        @keyframes scaleDown { from { transform: scale(1); opacity: 1; } to { transform: scale(0.8); opacity: 0; } }
-        .scan-line { width: 100%; height: 4px; background: var(--wondr-cyan); position: absolute; top: 0; left: 0; opacity: 0.8; box-shadow: 0 0 10px var(--wondr-cyan); animation: scan 1.5s infinite linear; display: none; }
-        @keyframes scan { 0% { top: 0; } 50% { top: 100%; } 100% { top: 0; } }
     </style>
   <link rel="stylesheet" href="./css/style.css">
 </head>
@@ -66,7 +57,6 @@
                 <button type="submit" id="btnLogin" class="btn w-100 btn-modern shadow-sm mt-3">Masuk</button>
             </form>
 
-            <!-- Bagian Tombol Biometrik -->
             <div id="bioLoginSection" class="text-center mt-4" style="display: none;">
                 <p class="text-muted" style="font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.05rem;">Atau gunakan</p>
                 <button type="button" class="btn bio-btn shadow-sm mx-auto" onclick="triggerBiometricLogin()">
@@ -78,29 +68,14 @@
                 <i class="bi bi-wifi-off"></i> Mode Offline. Data tersimpan di HP.
             </div>
         </div>
-
-        <!-- POPUP SIMULASI SCAN BIOMETRIK -->
-        <div id="bioPopup" class="position-absolute top-0 start-0 w-100 h-100 bg-dark bg-opacity-50 d-none z-3 flex-column justify-content-center align-items-center px-4" style="backdrop-filter: blur(2px);">
-            <div id="bioPopupContent" class="bg-white w-100 rounded-4 p-4 text-center shadow">
-                <div class="position-relative mx-auto mb-3 d-inline-flex align-items-center justify-content-center rounded-4" style="width: 70px; height: 70px; background-color: #f0f7f9; overflow: hidden;">
-                    <i id="bioIcon" class="bi bi-fingerprint" style="font-size: 2.8rem; color: #005a70;"></i>
-                    <div id="bioScanLine" class="scan-line"></div>
-                </div>
-                <h6 id="bioTitle" class="fw-bold text-dark mb-2">Login Biometrik</h6>
-                <p id="bioMessage" class="text-muted mb-4" style="font-size: 0.75rem; line-height: 1.5;">Silakan sentuh sensor sidik jari / Face ID Anda.</p>
-                <button type="button" id="btnCancelBio" class="btn w-100 rounded-pill py-2 fw-bold text-white shadow-sm" style="background-color: #dc3545; font-size: 0.8rem;" onclick="closeBiometricLogin()">Batal</button>
-            </div>
-        </div>
     </div>
+    
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="./js/db.js"></script>
-    <script src="./js/script.js"></script> <!-- TAMBAH INI BIAR ADA showToast -->
+    <script src="./js/script.js"></script>
     <script>
         let currentUserData = null;
         const userId = localStorage.getItem('current_user_id');
-
-        // Helper Konversi ArrayBuffer
-        const base64ToBuffer = (base64) => Uint8Array.from(atob(base64), c => c.charCodeAt(0));
 
         window.addEventListener('offline', () => document.getElementById('offlineAlert').classList.remove('d-none'));
         window.addEventListener('online', () => document.getElementById('offlineAlert').classList.add('d-none'));
@@ -119,18 +94,16 @@
                 document.getElementById('loadingBox').style.display = 'none';
                 document.getElementById('loginForm').style.display = 'block';
                 
-                // Jika user punya data WebAuthn, tampilkan tombol sidik jari
-                if (localStorage.getItem(`webauthn_${userId}`)) {
+                if (localStorage.getItem(`bio_enabled_${userId}`) === 'true') {
                     document.getElementById('bioLoginSection').style.display = 'block';
                 }
 
                 document.getElementById('inputPIN').focus();
             } catch(err){ 
-                showToast("Gagal memuat data", "error"); // GANTI ALERT
+                showToast("Gagal memuat data", "error"); 
             }
         });
 
-        // LOGIN PIN MANUAL
         document.getElementById('loginForm').addEventListener('submit', async function(e) {
             e.preventDefault();
             const btn = document.getElementById('btnLogin');
@@ -140,14 +113,14 @@
             btn.disabled = true; btn.innerText = "Memeriksa..."; errorMsg.style.display = 'none';
             try {
                 if(btoa(inputPIN.value) === currentUserData.pin){
-                    showToast("Login berhasil!", "success"); // TAMBAH TOAST
+                    showToast("Login berhasil!", "success");
                     localStorage.setItem('is_logged_in', 'true');
                     setTimeout(() => {
                         window.location.href = './index.html';
-                    }, 800); // kasih jeda biar toast kebaca
+                    }, 800); 
                 } else {
                     errorMsg.style.display = 'block';
-                    showToast("PIN salah", "error"); // TAMBAH TOAST
+                    showToast("PIN salah", "error"); 
                     inputPIN.value = ""; inputPIN.focus();
                 }
             } catch(err) { 
@@ -156,56 +129,32 @@
             finally { btn.disabled = false; btn.innerText = "Masuk"; }
         });
 
-        // LOGIKA NATIVE WEBAUTHN (LOGIN)
-        async function triggerBiometricLogin() {
-            const storedCredId = localStorage.getItem(`webauthn_${userId}`);
-            
-            const btnBio = document.querySelector('.bio-btn');
-            const iconBio = btnBio.querySelector('i');
-            
-            if (!storedCredId || !window.PublicKeyCredential) {
-                showToast("Sistem biometrik tidak tersedia", "error"); // GANTI ALERT
-                return;
-            }
-
-            try {
-                iconBio.className = "bi bi-hourglass-split spinner-border spinner-border-sm fs-4 text-muted border-0";
-                
-                const publicKey = {
-                    challenge: crypto.getRandomValues(new Uint8Array(32)),
-                    allowCredentials: [{
-                        type: "public-key",
-                        id: base64ToBuffer(storedCredId)
-                    }],
-                    userVerification: "required",
-                    timeout: 60000
-                };
-
-                const assertion = await navigator.credentials.get({ publicKey });
-
-                if (assertion) {
-                    iconBio.className = "bi bi-check-circle-fill fs-2 text-success";
-                    navigator.vibrate && navigator.vibrate([100, 50, 100]);
-                    showToast("Login biometrik berhasil!", "success"); // TAMBAH TOAST
-                    localStorage.setItem('is_logged_in', 'true');
-                    
-                    setTimeout(() => {
-                        window.location.href = './index.html';
-                    }, 800);
-                }
-            } catch (err) {
-                console.error("Biometrik gagal:", err);
-                iconBio.className = "bi bi-fingerprint fs-2";
-                
-                if(err.name === "NotAllowedError") {
-                    showToast("Login dibatalkan", "info"); // GANTI ALERT
-                } else {
-                    showToast("Gagal memanggil sensor: " + err.message, "error"); // GANTI ALERT
-                }
+        function triggerBiometricLogin() {
+            if (window.cordova && window.Fingerprint) {
+                Fingerprint.isAvailable(
+                    function() {
+                        Fingerprint.show({
+                            title: "Login Biometrik",
+                            subtitle: "TheraLog App",
+                            description: "Gunakan Sidik Jari / Face ID Anda",
+                            fallbackButtonTitle: "Batal",
+                            disableBackup: true
+                        }, function() {
+                            showToast("Login berhasil!", "success");
+                            localStorage.setItem('is_logged_in', 'true');
+                            setTimeout(() => { window.location.href = './index.html'; }, 800);
+                        }, function() {
+                            showToast("Autentikasi batal atau gagal", "error");
+                        });
+                    },
+                    function() {
+                        showToast("Sensor biometrik tidak tersedia", "error");
+                    }
+                );
+            } else {
+                showToast("Fitur Sidik Jari hanya berlaku untuk Aplikasi Android.", "warning");
             }
         }
-
     </script>
-
 </body>
 </html>
