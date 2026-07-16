@@ -1,13 +1,30 @@
 <?xml version='1.0' encoding='utf-8'?>
-<widget id="com.theralog" version="1.0.0" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
-    <name>Theralog</name>
+<widget id="com.theralog.app" version="1.0.0" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
+    <name>TheraLog</name>
     <description>
-        A sample Apache Cordova application that responds to the deviceready event.
+        Aplikasi pencatatan log sesi untuk Terapis.
     </description>
-    <author email="dev@cordova.apache.org" href="https://cordova.apache.org">
-        Apache Cordova Team
+    <author email="admin@theralog.com" href="https://theralogapp.vercel.app">
+        TheraLog Team
     </author>
+    
     <content src="index.html" />
+    
+    <!-- MENGIZINKAN AKSES KE API LUAR (GOOGLE APPS SCRIPT) -->
+    <access origin="*" />
+    
     <allow-intent href="http://*/*" />
     <allow-intent href="https://*/*" />
+    <allow-intent href="tel:*" />
+    <allow-intent href="sms:*" />
+    <allow-intent href="mailto:*" />
+    <allow-intent href="geo:*" />
+
+    <!-- KONFIGURASI KHUSUS ANDROID -->
+    <platform name="android">
+        <preference name="android-minSdkVersion" value="22" />
+        <preference name="android-targetSdkVersion" value="33" />
+        <!-- Jika nanti kamu punya icon, tambahkan di sini -->
+        <!-- <icon density="ldpi" src="res/icon/android/ldpi.png" /> -->
+    </platform>
 </widget>
