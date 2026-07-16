@@ -23,7 +23,7 @@ jobs:
     - name: Setup Node
       uses: actions/setup-node@v4
       with:
-        node-version: '20'
+        node-version: '24' # Diperbarui ke versi 24
 
     - name: Setup Java
       uses: actions/setup-java@v4
@@ -71,7 +71,6 @@ jobs:
       env:
         KEYSTORE_BASE64: ${{ secrets.KEYSTORE_BASE64 }}
       run: |
-        # Memastikan keystore disimpan di dalam folder cordova
         echo $KEYSTORE_BASE64 | base64 -d > cordova/keystore.jks
 
     - name: Build Release APK
@@ -80,20 +79,20 @@ jobs:
         STORE_PASS: ${{ secrets.STORE_PASS }}
         KEY_PASS: ${{ secrets.KEY_PASS }}
       run: |
+        # Memaksa build menghasilkan APK
         cordova build android --release --verbose \
           --keystore=keystore.jks \
           --storePassword=$STORE_PASS \
           --alias=theralog \
-          --password=$KEY_PASS
+          --password=$KEY_PASS \
+          -- --packageType=apk
           
-        # Debug: liat hasil build
-        ls -R platforms/android/app/build/outputs/apk/
-
     - name: Rename APK with version
       run: |
-        APK=$(find cordova/platforms/android/app/build/outputs/apk -name "*.apk" | head -n 1)
-        if [ -z "$APK" ]; then echo "APK not found! Build gagal"; exit 1; fi
-        mv $APK TheraLog-${{ steps.version.outputs.version }}.apk
+        # Mencari APK di seluruh folder output agar lebih aman
+        APK=$(find cordova/platforms/android/app/build/outputs -name "*.apk" | head -n 1)
+        if [ -z "$APK" ]; then echo "APK not found!"; exit 1; fi
+        mv "$APK" TheraLog-${{ steps.version.outputs.version }}.apk
 
     - name: Create Release
       uses: softprops/action-gh-release@v2
@@ -101,31 +100,32 @@ jobs:
         tag_name: ${{ steps.version.outputs.version }}
         name: Release ${{ steps.version.outputs.version }}
         body: |
-          Auto build dari commit: ${{ github.sha }}
-          
-          **Perubahan:**
-          - Build otomatis dari folder /app
-          
-          Install file `TheraLog-${{ steps.version.outputs.version }}.apk` di bawah
+          Build otomatis dari commit: ${{ github.sha }}
+          Status Build: ${{ job.status }}
         files: TheraLog-${{ steps.version.outputs.version }}.apk
         draft: false
         prerelease: false
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
     - name: Kirim Notifikasi ke Telegram
-      if: always() # Ini WAJIB ada agar notif tetap dikirim meskipun build GAGAL
+      if: always()
       env:
         TELEGRAM_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
         TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
         STATUS: ${{ job.status }}
         COMMIT_MSG: ${{ github.event.head_commit.message }}
+        RELEASE_URL: https://github.com/${{ github.repository }}/releases/tag/${{ steps.version.outputs.version }}
       run: |
+        if [ -z "$TELEGRAM_TOKEN" ]; then echo "Token Telegram tidak ditemukan!"; exit 0; fi
+        MESSAGE="🤖 *Notifikasi Build TheraLog*
+        
+        📦 *Status:* ${STATUS}
+        👤 *Oleh:* ${{ github.actor }}
+        📝 *Pesan:* ${COMMIT_MSG}
+        🔗 *Link:* ${RELEASE_URL}"
+        
         curl -s -X POST "https://api.telegram.org/bot${TELEGRAM_TOKEN}/sendMessage" \
           -d chat_id="${TELEGRAM_CHAT_ID}" \
-          -d text="🤖 *Notifikasi Build TheraLog*
-          
-          📦 *Status:* ${STATUS}
-          👤 *Aktor:* ${{ github.actor }}
-          📝 *Pesan Commit:* ${COMMIT_MSG}" \
+          -d text="${MESSAGE}" \
           -d parse_mode="Markdown"
-
