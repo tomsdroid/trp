@@ -108,8 +108,8 @@
         document.addEventListener("DOMContentLoaded", async () => {
             const isLoggedIn = localStorage.getItem('is_logged_in');
 
-            if(!userId){ window.location.href = './onboarding.html'; return; }
-            if(isLoggedIn === 'true'){ window.location.href = './index.html'; return; }
+            if(!userId){ window.location.href = '/app/onboarding.html'; return; }
+            if(isLoggedIn === 'true'){ window.location.href = '/app/index.html'; return; }
 
             try {
                 await initDB(); 
@@ -143,7 +143,7 @@
                     showToast("Login berhasil!", "success"); // TAMBAH TOAST
                     localStorage.setItem('is_logged_in', 'true');
                     setTimeout(() => {
-                        window.location.href = 'index.html';
+                        window.location.href = '/app/index.html';
                     }, 800); // kasih jeda biar toast kebaca
                 } else {
                     errorMsg.style.display = 'block';
@@ -190,7 +190,7 @@
                     localStorage.setItem('is_logged_in', 'true');
                     
                     setTimeout(() => {
-                        window.location.href = 'index.html';
+                        window.location.href = '/app/index.html';
                     }, 800);
                 }
             } catch (err) {

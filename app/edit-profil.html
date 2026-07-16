@@ -22,7 +22,7 @@
 <body class="bg-light">
     <div id="app-container">
         <div class="bg-white pt-4 pb-3 px-3 shadow-sm d-flex align-items-center position-sticky top-0 z-3">
-            <a href="pengaturan.html" class="text-dark me-2 mt-1"><i class="bi bi-arrow-left fs-5"></i></a>
+            <a href="/app/pengaturan.html" class="text-dark me-2 mt-1"><i class="bi bi-arrow-left fs-5"></i></a>
             <h5 class="fw-bold mb-0" style="color: #005a70;">Edit Profil Pribadi</h5>
         </div>
 
@@ -93,7 +93,7 @@
 
     document.addEventListener("DOMContentLoaded", async function() {
         const userId = localStorage.getItem('current_user_id');
-        if(!userId){ window.location.href = 'pengaturan.html'; return; }
+        if(!userId){ window.location.href = '/app/pengaturan.html'; return; }
         currentUserData = await getTherapist(userId);
         if(currentUserData){
             document.getElementById('inputID').value = currentUserData.therapist_id;
@@ -150,7 +150,7 @@
             await saveTherapist(updatedData); // SIMPAN KE INDEXEDDB INSTAN
 
             showToast('Profil berhasil diperbarui!', 'success');
-            window.location.href = 'pengaturan.html';
+            window.location.href = '/app/pengaturan.html';
 
         } catch (err) {
             console.error(err); alert('Gagal menyimpan: ' + err);

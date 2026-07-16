@@ -72,14 +72,14 @@
                 </div>
 
                 <!-- Tombol Input Log -->
-                <a href="input.html" class="btn w-100 rounded-3 py-2 fw-bold text-white shadow-sm mb-3 text-decoration-none d-flex justify-content-center align-items-center" style="background-color: #f78c22; font-size: 0.8rem;">
+                <a href="/app/input.html" class="btn w-100 rounded-3 py-2 fw-bold text-white shadow-sm mb-3 text-decoration-none d-flex justify-content-center align-items-center" style="background-color: #f78c22; font-size: 0.8rem;">
                     <i class="bi bi-pencil-square me-2 fs-6"></i> Input Log Baru
                 </a>
 
                 <!-- Riwayat / Log Terakhir -->
                 <div class="d-flex justify-content-between align-items-center mb-2">
                     <span class="fw-bold text-dark mb-0" style="font-size:0.8rem;">Log Terakhir</span>
-                    <a href="riwayat.html" class="fw-bold text-decoration-none" style="color: #005a70; font-size: 0.65rem;">Lihat Semua</a>
+                    <a href="/app/riwayat.html" class="fw-bold text-decoration-none" style="color: #005a70; font-size: 0.65rem;">Lihat Semua</a>
                 </div>
 
                 <div id="logTerakhir" class="card border-0 shadow-sm rounded-3 mb-5">
@@ -92,10 +92,10 @@
 
         <nav id="bottom-nav" class="navbar fixed-bottom bg-white shadow-lg rounded-top-3">
             <div class="container-fluid justify-content-around px-2">
-                <a href="./index.html" class="nav-item text-decoration-none active"><i class="bi bi-house-door-fill fs-5 d-block text-center"></i><span class="nav-label">Beranda</span></a>
-                <a href="./riwayat.html" class="nav-item text-decoration-none text-muted"><i class="bi bi-clock-history fs-5 d-block text-center"></i><span class="nav-label">Riwayat</span></a>
-                <a href="./recap.html" class="nav-item text-decoration-none text-muted"><i class="bi bi-pie-chart-fill fs-5 d-block text-center"></i><span class="nav-label">Rekap</span></a>
-                <a href="./pengaturan.html" class="nav-item text-decoration-none text-muted"><i class="bi bi-gear-fill fs-5 d-block text-center"></i><span class="nav-label">Pengaturan</span></a>
+                <a href="/app/index.html" class="nav-item text-decoration-none active"><i class="bi bi-house-door-fill fs-5 d-block text-center"></i><span class="nav-label">Beranda</span></a>
+                <a href="/app/riwayat.html" class="nav-item text-decoration-none text-muted"><i class="bi bi-clock-history fs-5 d-block text-center"></i><span class="nav-label">Riwayat</span></a>
+                <a href="/app/recap.html" class="nav-item text-decoration-none text-muted"><i class="bi bi-pie-chart-fill fs-5 d-block text-center"></i><span class="nav-label">Rekap</span></a>
+                <a href="/app/pengaturan.html" class="nav-item text-decoration-none text-muted"><i class="bi bi-gear-fill fs-5 d-block text-center"></i><span class="nav-label">Pengaturan</span></a>
             </div>
         </nav>
 
@@ -108,7 +108,7 @@
     <script src="./js/script.js"></script>
     <script>
         if(localStorage.getItem('is_logged_in')!== 'true'){
-            window.location.href = './login.html';
+            window.location.href = '/app/login.html';
         }
 
         document.addEventListener("DOMContentLoaded", async function() {

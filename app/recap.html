@@ -79,10 +79,10 @@
         <!-- Navigasi Bawah -->
         <nav id="bottom-nav" class="navbar fixed-bottom bg-white shadow-lg rounded-top-3">
             <div class="container-fluid justify-content-around px-2">
-                <a href="index.html" class="nav-item text-decoration-none text-muted"><i class="bi bi-house-door-fill fs-5 d-block text-center"></i><span class="nav-label">Beranda</span></a>
-                <a href="riwayat.html" class="nav-item text-decoration-none text-muted"><i class="bi bi-clock-history fs-5 d-block text-center"></i><span class="nav-label">Riwayat</span></a>
-                <a href="recap.html" class="nav-item text-decoration-none active"><i class="bi bi-pie-chart-fill fs-5 d-block text-center"></i><span class="nav-label">Rekap</span></a>
-                <a href="pengaturan.html" class="nav-item text-decoration-none text-muted"><i class="bi bi-gear-fill fs-5 d-block text-center"></i><span class="nav-label">Pengaturan</span></a>
+                <a href="/app/index.html" class="nav-item text-decoration-none text-muted"><i class="bi bi-house-door-fill fs-5 d-block text-center"></i><span class="nav-label">Beranda</span></a>
+                <a href="/app/riwayat.html" class="nav-item text-decoration-none text-muted"><i class="bi bi-clock-history fs-5 d-block text-center"></i><span class="nav-label">Riwayat</span></a>
+                <a href="/app/recap.html" class="nav-item text-decoration-none active"><i class="bi bi-pie-chart-fill fs-5 d-block text-center"></i><span class="nav-label">Rekap</span></a>
+                <a href="/app/pengaturan.html" class="nav-item text-decoration-none text-muted"><i class="bi bi-gear-fill fs-5 d-block text-center"></i><span class="nav-label">Pengaturan</span></a>
             </div>
         </nav>
 
@@ -133,7 +133,7 @@
 
         document.addEventListener("DOMContentLoaded", async function() {
             const userId = localStorage.getItem('current_user_id');
-            if(!userId) { window.location.href = 'onboarding.html'; return; }
+            if(!userId) { window.location.href = '/app/onboarding.html'; return; }
 
             await loadRekap(userId);
 

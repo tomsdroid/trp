@@ -297,7 +297,7 @@
                 
                 showToast("Registrasi berhasil!", "success"); // TAMBAH SUKSES
                 pinModal.hide();
-                setTimeout(() => { window.location.href = 'index.html'; }, 1200);
+                setTimeout(() => { window.location.href = '/app/index.html'; }, 1200);
             } catch (err) { 
                 showToast("Gagal menyimpan PIN: " + err, 'error');
                 console.error(err);
