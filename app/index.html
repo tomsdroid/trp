@@ -208,12 +208,18 @@
         }
 
         // ==========================================
-        // 3. LOGIKA RENDER HALAMAN (LOAD DATA)
-        // ==========================================
-        if(localStorage.getItem('is_logged_in')!== 'true'){
-            window.location.href = './login.html';
-        }
-
+// 3. LOGIKA RENDER HALAMAN (LOAD DATA)
+// ==========================================
+if(localStorage.getItem('is_logged_in') !== 'true'){
+    // Cek apakah URL saat ini berakhiran "/app" (tanpa garis miring)
+    if (window.location.pathname.endsWith('/app')) {
+        // Jika ya (di Vercel), panggil dengan folder app/
+        window.location.href = '/app/login.html';
+    } else {
+        // Jika sudah aman (atau di dalam APK Cordova), panggil normal
+        window.location.href = 'login.html';
+    }
+}
         document.addEventListener("DOMContentLoaded", async function() {
             const userId = localStorage.getItem('current_user_id');
             if(!userId) return;
