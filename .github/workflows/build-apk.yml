@@ -107,6 +107,7 @@ jobs:
         body: |
           Build otomatis dari commit: ${{ github.sha }}
           Status Build: ${{ job.status }}
+        # PERBAIKAN 1: Huruf T diperbesar agar sesuai dengan output file di langkah sebelumnya
         files: TheraLog-${{ steps.version.outputs.version }}.apk
         draft: false
         prerelease: false
@@ -126,16 +127,15 @@ jobs:
         
         if [ "$STATUS" == "success" ]; then
           STATUS_TEXT="✅ *BERHASIL (SUCCESS)*"
-          LINK_INFO="🔗 *Download APK:* [Klik di sini untuk Download](${RELEASE_URL})"
         else
           STATUS_TEXT="❌ *GAGAL (FAILED)*"
-          LINK_INFO="🔍 *Cek Log Error:* [Lihat Detail Error di GitHub](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }})"
         fi
         
+        # PERBAIKAN 2: Sintaks pemanggilan variabel diperbaiki
         MESSAGE="📢 *Update Theralog App*
 
-        Yeay 🥳 sekarang versi ${{VERSION}} sudah rilis nih.
-        Link Download: ${{RELEASE_URL}}
+        Yeay 🥳 sekarang versi ${{ steps.version.outputs.version }} sudah rilis nih.
+        Link Download: ${RELEASE_URL}
         _*Theralog App - Satu Aplikasi, Semua Sesi Terkendali*_"
         
         curl -s -X POST "https://api.telegram.org/bot${TELEGRAM_TOKEN}/sendMessage" \
