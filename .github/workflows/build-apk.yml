@@ -58,10 +58,12 @@ jobs:
         NEW_VERSION="v$MAJOR.$MINOR.$PATCH"
         echo "version=$NEW_VERSION" >> $GITHUB_OUTPUT
 
-    - name: Update version in config.xml
+    - name: Update version and Target API in config.xml
       run: |
         sed -i "s/version=\".*\"/version=\"${VERSION#v}\"/" cordova/config.xml
         sed -i "s/android-versionCode=\".*\"/android-versionCode=\"${GITHUB_RUN_NUMBER}\"/" cordova/config.xml
+        # Paksa Cordova menggunakan Android API 34 agar lolos validasi AndroidX/OneSignal
+        sed -i 's/<\/widget>/<preference name="android-compileSdkVersion" value="34" \/>\n    <preference name="android-targetSdkVersion" value="34" \/>\n<\/widget>/g' cordova/config.xml
       env:
         VERSION: ${{ steps.version.outputs.version }}
 
