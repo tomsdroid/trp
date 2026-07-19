@@ -165,7 +165,7 @@
     <nav class="navbar navbar-expand-lg navbar-light navbar-glass fixed-top py-2">
         <div class="container px-3">
             <a class="navbar-brand fw-bold d-flex align-items-center m-0" href="#" style="color: var(--primary); font-size: 1.2rem;">
-                <i class="bi bi-box-seam-fill fs-4 me-2 text-warning"></i> TheraLog
+                <img src="./favicon-96x96.png" alt="Theralog App" width="40" class="me-1"> TheraLog
             </a>
             <div class="ms-auto d-flex gap-2">
                 <a href="/app/" class="btn btn-custom shadow-sm" style="font-size: 0.85rem;">Buka Web App</a>
@@ -176,8 +176,8 @@
         <div class="container px-3">
             <div class="row justify-content-center mb-4 mb-md-5">
                 <div class="col-lg-8">
-                    <span class="badge bg-white text-primary border border-primary shadow-sm rounded-pill px-3 py-2 mb-3 fw-normal" style="font-size: 0.75rem;">
-                        <i class="bi bi-stars text-warning me-1"></i> Versi 1.3.5 Kini Tersedia
+                    <span id="versionBadge" class="badge bg-white text-primary border border-primary shadow-sm rounded-pill px-3 py-2 mb-3 fw-normal" style="font-size: 0.75rem;">
+                        <i class="bi bi-stars text-warning me-1"></i> Memuat versi...
                     </span>
                     <h1 class="hero-title mb-3">Catat Log Terapi Lebih <span style="color: var(--accent);">Cerdas.</span></h1>
                     <p class="text-muted mb-4 px-md-5" style="font-size: 0.95rem;">
@@ -246,7 +246,7 @@
         <div class="container px-3 text-center py-4">
             <h2 class="fw-bold mb-3" style="font-size: 1.8rem;">Siap beralih ke cara modern?</h2>
             <p class="mb-5 opacity-75" style="font-size: 0.95rem;">Bergabunglah dengan terapis profesional lainnya.</p>
-            <a href="/app" class="btn btn-light rounded-pill px-5 py-3 fw-bold shadow-sm" style="color: var(--primary); font-size: 0.95rem;">Mulai Gunakan Sekarang</a>
+            <a href="/app/" class="btn btn-light rounded-pill px-5 py-3 fw-bold shadow-sm" style="color: var(--primary); font-size: 0.95rem;">Mulai Gunakan Sekarang</a>
             <div class="mt-5 pt-4 border-top border-light border-opacity-25 d-flex flex-column align-items-center">
                 <div class="d-flex gap-4 mb-3">
                     <a href="#" class="text-white opacity-75 text-decoration-none" style="font-size: 0.8rem;">Bantuan</a>
@@ -263,6 +263,12 @@
             try {
                 const response = await fetch('https://api.github.com/repos/tomsdroid/trp/releases/latest');
                 const data = await response.json();
+                
+                const versionBadge = document.getElementById('versionBadge');
+                if (data.tag_name) {
+                    versionBadge.innerHTML = `<i class="bi bi-stars text-warning me-1"></i> Versi ${data.tag_name} Kini Tersedia`;
+                }
+                
                 const apkAsset = data.assets.find(asset => asset.name.endsWith('.apk'));
                 if (apkAsset) {
                     const btn = document.getElementById('downloadApkBtn');
@@ -270,9 +276,11 @@
                     btn.style.display = 'inline-block';
                 }
             } catch (err) {
-                console.error("Gagal mengambil APK terbaru:", err);
+                console.error("Gagal mengambil data versi/APK:", err);
+                document.getElementById('versionBadge').innerText = "Gagal memuat versi";
             }
         }
+
         getLatestApk();
     </script>
 </body>

@@ -6,6 +6,8 @@ on:
     paths:
       - 'app/**' 
       - 'cordova/**'
+      - 'src/**'
+      - 'package.json'
   workflow_dispatch:
 
 jobs:
@@ -37,11 +39,14 @@ jobs:
     - name: Install Cordova
       run: npm install -g cordova@12
 
-    - name: Copy PWA to Cordova www
+    - name: Build Vue App (Vite)
+      working-directory: ./app
+      env:
+        VITE_TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+        VITE_TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
       run: |
-        mkdir -p cordova/www
-        rm -rf cordova/www/*
-        cp -r app/* cordova/www/
+        npm install
+        npm run build
 
     - name: Auto Versioning
       id: version
@@ -60,13 +65,17 @@ jobs:
       env:
         VERSION: ${{ steps.version.outputs.version }}
 
-    - name: Install Cordova deps
+    - name: Install Cordova deps & Plugins
       working-directory: ./cordova
       run: |
         cordova platform rm android || true
         cordova platform add android@13
         cordova plugin add cordova-plugin-inappbrowser
+        cordova plugin add cordova-plugin-file
         cordova plugin add cordova-plugin-fingerprint-aio
+        cordova plugin add onesignal-cordova-plugin
+        cordova plugin add cordova-plugin-app-update
+        cordova plugin add cordova-plugin-background-mode
 
     - name: Decode Keystore
       env:
@@ -107,7 +116,6 @@ jobs:
         body: |
           Build otomatis dari commit: ${{ github.sha }}
           Status Build: ${{ job.status }}
-        # PERBAIKAN 1: Huruf T diperbesar agar sesuai dengan output file di langkah sebelumnya
         files: TheraLog-${{ steps.version.outputs.version }}.apk
         draft: false
         prerelease: false
@@ -131,7 +139,6 @@ jobs:
           STATUS_TEXT="❌ *GAGAL (FAILED)*"
         fi
         
-        # PERBAIKAN 2: Sintaks pemanggilan variabel diperbaiki
         MESSAGE="📢 *Update Theralog App*
 
         Yeay 🥳 sekarang versi ${{ steps.version.outputs.version }} sudah rilis nih.

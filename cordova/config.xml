@@ -1,11 +1,11 @@
 <?xml version='1.0' encoding='utf-8'?>
 <widget id="com.theralog.app" version="1.0.0" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
-    <name>TheraLog</name>
+    <name>Terapio</name>
     <description>
         Aplikasi pencatatan log sesi untuk Terapis.
     </description>
     <author email="admin@theralog.com" href="https://theralogapp.vercel.app">
-        TheraLog Team
+        Terapio Team
     </author>
     
     <content src="index.html" />
