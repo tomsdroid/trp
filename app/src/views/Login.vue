@@ -38,14 +38,6 @@
       </div>
 
       <button v-if="terapisTersimpan" @click="mulaiResetPin" class="text-[11px] font-bold text-slate-400 hover:text-teal-600 mt-4">Lupa PIN?</button>
-
-      <!-- Tombol Sidik Jari -->
-      <div v-if="terapisTersimpan" class="mt-6 pt-6 border-t border-slate-50">
-        <p class="text-[10px] text-slate-400 mb-3 font-bold uppercase tracking-wider">Atau dengan Sidik Jari</p>
-        <button type="button" @click="loginBiometric" class="w-16 h-16 mx-auto bg-slate-50 text-slate-500 border border-slate-100 hover:bg-teal-50 hover:text-teal-600 hover:border-teal-200 rounded-full flex items-center justify-center active:scale-90 transition-all shadow-sm">
-          <FingerprintIcon :size="32" />
-        </button>
-      </div>
     </div>
 
     <!-- TAMPILAN LUPA PIN -->
@@ -88,7 +80,8 @@
 import { ref, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
 import { db } from '../db';
-import { Lock as LockIcon, Fingerprint as FingerprintIcon, User as UserIcon, Key as KeyIcon, UserCog as UserCogIcon } from 'lucide-vue-next';
+import { showToast } from '../../composables/useToast';
+import { Lock as LockIcon, User as UserIcon, Key as KeyIcon, UserCog as UserCogIcon } from 'lucide-vue-next';
 
 const router = useRouter();
 const loginPin = ref('');
@@ -154,33 +147,6 @@ const loginTerapis = async () => {
   }
 };
 
-const loginBiometric = () => {
-  errorMsg.value = ''; 
-  const isEnabled = localStorage.getItem('use_biometrics') === 'true';
-
-  if (!isEnabled) {
-    errorMsg.value = "Sensor sidik jari belum diaktifkan di Pengaturan.";
-    return;
-  }
-
-  if (window.Fingerprint) {
-    window.Fingerprint.show(
-      {
-        description: "Sentuh sensor untuk masuk ke Terapio",
-        disableBackup: true,
-      },
-      (success) => {
-        prosesLoginBerhasil();
-      },
-      (error) => {
-        errorMsg.value = "Otentikasi sidik jari gagal atau dibatalkan.";
-      }
-    );
-  } else {
-    errorMsg.value = "Sensor sidik jari tidak ditemukan pada perangkat ini.";
-  }
-};
-
 const lanjutKeDashboard = (role) => {
   const uniqueId = terapisTersimpan.value.therapist_id; // STRICT
   localStorage.setItem('logged_in_id', uniqueId);
@@ -188,6 +154,7 @@ const lanjutKeDashboard = (role) => {
   localStorage.setItem('active_role', role);
   showRoleModal.value = false;
   router.push('/dashboard');
+  showToast("Login berhasil", 'success')
 };
 
 const mulaiResetPin = () => { isResettingPin.value = true; resetError.value = ''; };

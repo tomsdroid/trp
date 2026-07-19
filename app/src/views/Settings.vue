@@ -34,20 +34,6 @@
           <ChevronRightIcon :size="16" class="text-slate-300" />
         </button>
 
-        <div class="w-full flex items-center justify-between p-4 border-b border-slate-50">
-          <div class="flex items-center gap-3 flex-1">
-            <div class="bg-purple-50 p-2 rounded-lg text-purple-600"><FingerprintIcon :size="18" /></div>
-            <div class="text-left">
-              <p class="text-sm font-bold text-slate-700">Login Sidik Jari</p>
-              <p class="text-[10px] text-slate-400">Gunakan biometrik perangkat</p>
-            </div>
-          </div>
-          <label class="relative inline-flex items-center cursor-pointer">
-            <input type="checkbox" v-model="useBiometrics" @change="toggleBiometrics" class="sr-only peer">
-            <div class="w-9 h-5 bg-slate-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-teal-500"></div>
-          </label>
-        </div>
-
         <button @click="$router.push('/ubah-pin')" class="w-full flex items-center gap-3 p-4 border-b border-slate-50 active:bg-slate-50 transition-colors">
           <div class="bg-teal-50 p-2 rounded-lg text-teal-600"><LockIcon :size="18" /></div>
           <div class="text-left flex-1">
@@ -60,7 +46,7 @@
         <button @click="$router.push('/sync')" class="w-full flex items-center gap-3 p-4 border-b border-slate-50 active:bg-slate-50 transition-colors">
           <div class="bg-orange-50 p-2 rounded-lg text-orange-500"><CloudSyncIcon :size="18" /></div>
           <div class="text-left flex-1">
-            <p class="text-sm font-bold text-slate-700">Sinkronisasi Data</p>
+            <p class="text-sm font-bold text-slate-700">Cadangkan Data</p>
             <p class="text-[10px] text-slate-400">Kirim log offline ke server</p>
           </div>
           <ChevronRightIcon :size="16" class="text-slate-300" />
@@ -85,6 +71,8 @@
         <Trash2Icon :size="16" /> Hapus Data Lokal & Reset
       </button>
 
+    <AppCredit />
+      
     </div>
 
     <BottomNav activeTab="settings" />
@@ -98,6 +86,7 @@ import { ref, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
 import { db } from '../db';
 import BottomNav from '../components/BottomNav.vue';
+import AppCredit from '../components/AppCredit.vue';
 
 import { 
   User as UserIcon, Lock as LockIcon, ChevronRight as ChevronRightIcon,
@@ -123,31 +112,6 @@ onMounted(async () => {
   const bioPref = localStorage.getItem('use_biometrics');
   if (bioPref === 'true') useBiometrics.value = true;
 });
-
-const toggleBiometrics = () => {
-  if (window.Fingerprint) {
-    window.Fingerprint.isAvailable(
-      (result) => {
-        localStorage.setItem('use_biometrics', useBiometrics.value);
-        if (useBiometrics.value) {
-          showToast("Login sidik jari diaktifkan", "success");
-        } else {
-          showToast("Login sidik jari dinonaktifkan", "info");
-        }
-      },
-      (error) => {
-        useBiometrics.value = false;
-        localStorage.setItem('use_biometrics', 'false');
-        showToast("Perangkat tidak mendukung atau sidik jari belum didaftarkan di HP.", "error");
-      }
-    );
-  } else {
-    if (useBiometrics.value) {
-      useBiometrics.value = false;
-      showToast("Fitur ini hanya berjalan di Aplikasi (APK).", "error");
-    }
-  }
-};
 
 const logout = () => {
   showConfirm(

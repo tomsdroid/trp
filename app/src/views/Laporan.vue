@@ -74,11 +74,7 @@
         </div>
       </div>
 
-      <!-- App Info / Credit -->
-      <div class="text-center mt-8 mb-2">
-        <p class="text-[10px] font-bold text-slate-400 tracking-wider">TERAPIO v1.3.8</p>
-        <p class="text-[9px] text-slate-400 mt-1">© 2026 Terapio. Dibuat dengan <span class="text-red-400">❤</span> untuk Terapis</p>
-      </div>
+      <AppCredit />
 
     </div>
   </div>
@@ -88,6 +84,7 @@
 import { ref, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
 import { db } from '../db';
+import AppCredit from '../components/AppCredit.vue';
 import { 
   ArrowLeft as ArrowLeftIcon, 
   TrendingUp as TrendingUpIcon, 

@@ -94,12 +94,14 @@
         </div>
       </div>
     </template>
+  <AppCredit />
   </div>
 </template>
 
 <script setup>
 import { ref, onMounted } from 'vue';
 import { ArrowLeft as ArrowLeftIcon, Trophy as TrophyIcon } from 'lucide-vue-next';
+import AppCredit from '../components/AppCredit.vue';
 
 // Ganti URL ini dengan domain API kamu jika perlu
 const API_URL = 'https://terapio.cahayaelektrik.com/api'; 

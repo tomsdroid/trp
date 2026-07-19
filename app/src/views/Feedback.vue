@@ -32,6 +32,7 @@
           </button>
         </form>
       </div>
+  <AppCredit />
     </div>
   </div>
 </template>
@@ -40,6 +41,7 @@
 import { ref } from 'vue';
 import { ArrowLeft as ArrowLeftIcon, Loader as LoaderIcon } from 'lucide-vue-next';
 import { showToast } from '../composables/useToast'; 
+import AppCredit from '../components/AppCredit.vue';
 
 // AMBIL DARI FILE .env
 const TELEGRAM_BOT_TOKEN = import.meta.env.VITE_TELEGRAM_BOT_TOKEN; 
