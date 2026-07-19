@@ -3,11 +3,6 @@ name: Build & Release Android APK
 on:
   push:
     branches: [ main ]
-    paths:
-      - 'app/**' 
-      - 'cordova/**'
-      - 'src/**'
-      - 'package.json'
   workflow_dispatch:
 
 jobs:
@@ -39,7 +34,7 @@ jobs:
     - name: Install Cordova
       run: npm install -g cordova@12
 
-        - name: Build Vue App (Vite)
+    - name: Build Vue App (Vite)
       working-directory: ./app
       env:
         VITE_TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
@@ -48,10 +43,13 @@ jobs:
         npm install
         npm run build
         
-        # 1. Hapus isi folder www bawaan Cordova (template robot)
+        # 1. Pastikan foldernya dibuat jika belum ada
+        mkdir -p ../cordova/www/
+        
+        # 2. Hapus isi folder www (kalau misal ada sisa file lama/template)
         rm -rf ../cordova/www/*
         
-        # 2. Pindahkan hasil build Vue (dari folder dist) ke folder www Cordova
+        # 3. Pindahkan hasil build Vue (dari folder dist) ke folder www Cordova
         cp -r dist/* ../cordova/www/
 
     - name: Auto Versioning
