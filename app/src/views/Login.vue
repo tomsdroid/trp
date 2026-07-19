@@ -80,7 +80,7 @@
 import { ref, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
 import { db } from '../db';
-import { showToast } from '../../composables/useToast';
+import { showToast } from '../composables/useToast';
 import { Lock as LockIcon, User as UserIcon, Key as KeyIcon, UserCog as UserCogIcon } from 'lucide-vue-next';
 
 const router = useRouter();
