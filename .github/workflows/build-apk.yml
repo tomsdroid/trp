@@ -25,7 +25,7 @@ jobs:
     - name: Setup Node
       uses: actions/setup-node@v4
       with:
-        node-version: '24'
+        node-version: '20'
 
     - name: Setup Java
       uses: actions/setup-java@v4
@@ -70,6 +70,7 @@ jobs:
       run: |
         cordova platform rm android || true
         cordova platform add android@13
+        cordova plugin add cordova-plugin-androidx-adapter
         cordova plugin add cordova-plugin-inappbrowser
         cordova plugin add cordova-plugin-file
         cordova plugin add cordova-plugin-fingerprint-aio
@@ -85,8 +86,10 @@ jobs:
 
     - name: Build Unsigned APK
       working-directory: ./cordova
+      env:
+        GRADLE_OPTS: "-Dorg.gradle.jvmargs='-Xmx2048m'"
       run: |
-        cordova build android --release -- --packageType=apk
+        cordova build android --release -- --packageType=apk --info --stacktrace
           
     - name: Sign APK (Zipalign & Apksigner)
       env:
