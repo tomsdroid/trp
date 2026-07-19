@@ -88,7 +88,7 @@
 </template>
 
 <script setup>
-  import { showToast } from '../composables/useToast';
+  import { showToast } from '../../composables/useToast';
 import { ref, onMounted } from 'vue';
 import { ArrowLeft as ArrowLeftIcon, MapPin as MapPinIcon, Plus as PlusIcon, Edit2 as Edit2Icon, X as XIcon } from 'lucide-vue-next';
 
