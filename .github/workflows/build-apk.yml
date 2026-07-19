@@ -35,7 +35,7 @@ jobs:
 
     - name: Setup Android SDK
       uses: android-actions/setup-android@v3
-
+    
     - name: Install Cordova
       run: npm install -g cordova@12
 
