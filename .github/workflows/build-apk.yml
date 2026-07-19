@@ -39,7 +39,7 @@ jobs:
     - name: Install Cordova
       run: npm install -g cordova@12
 
-    - name: Build Vue App (Vite)
+        - name: Build Vue App (Vite)
       working-directory: ./app
       env:
         VITE_TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
@@ -47,6 +47,12 @@ jobs:
       run: |
         npm install
         npm run build
+        
+        # 1. Hapus isi folder www bawaan Cordova (template robot)
+        rm -rf ../cordova/www/*
+        
+        # 2. Pindahkan hasil build Vue (dari folder dist) ke folder www Cordova
+        cp -r dist/* ../cordova/www/
 
     - name: Auto Versioning
       id: version
