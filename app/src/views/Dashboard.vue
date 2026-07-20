@@ -195,13 +195,14 @@ onMounted(async () => {
   const currentId = localStorage.getItem('logged_in_id');
   if (!currentId) { router.replace('/login'); return; }
   
-  // 1. CARA BACA AVATAR ANTI GAGAL (Toleransi String/Number)
+  const myId = String(currentId).trim().toUpperCase();
+  
+  // 1. BACA DATA LOKAL AWAL
   const semuaTerapisLokal = await db.therapists.toArray();
-  const dataUser = semuaTerapisLokal.find(t => t.therapist_id == currentId);
+  const dataUser = semuaTerapisLokal.find(t => String(t.therapist_id).trim().toUpperCase() === myId);
 
   if (dataUser) {
     terapisName.value = dataUser.fullname || dataUser.shortname || 'Terapis';
-    // Karena kita sudah full lokal, cukup panggil avatar_url
     if (dataUser.avatar_url) {
       avatarUrl.value = dataUser.avatar_url;
     }
@@ -215,61 +216,77 @@ onMounted(async () => {
     } else {
       const now = new Date();
       const dateStr = getLocalDateString(now);
-      const allSessions = await db.sessions.where('therapist_id').equals(currentId).toArray();
       
-      sesiHariIni.value = allSessions.filter(s => s.date === dateStr).length;
+      const allSessions = await db.sessions.toArray();
+      
+      const sesiTerapisIni = allSessions.filter(s => 
+        String(s.therapist_id).trim().toUpperCase() === myId
+      );
+      
+      sesiHariIni.value = sesiTerapisIni.filter(s => {
+        const rawDate = s.date || s.timestamp || s.created_at || '';
+        const tglSesi = rawDate ? String(rawDate).substring(0, 10) : '';
+        return tglSesi === dateStr;
+      }).length;
       
       const periode = getPeriodeAktif(now);
       labelPeriode.value = periode.label;
       
-      const sesiPeriode = allSessions.filter(s => s.date >= periode.startText && s.date <= periode.endText);
-      totalKomisi.value = sesiPeriode.reduce((acc, s) => acc + (s.komisi || 0), 0);
+      const sesiPeriode = sesiTerapisIni.filter(s => {
+        const rawDate = s.date || s.timestamp || s.created_at || '';
+        const tglSesi = rawDate ? String(rawDate).substring(0, 10) : '';
+        return tglSesi >= periode.startText && tglSesi <= periode.endText;
+      });
+      
+      totalKomisi.value = sesiPeriode.reduce((acc, s) => acc + (Number(s.komisi) || 0), 0);
     }
   };
 
   await hitungData();
 
-  // 2. SINKRONISASI SERVER YANG "MENGUNCI" AVATAR LOKAL
+  // 2. SINKRONISASI SERVER 
   try {
     const res = await fetch('https://terapio.cahayaelektrik.com/api/get_master.php');
     if (res.ok) {
       const json = await res.json();
       if (json.status === 'success' && json.data) {
         
+        // --- PERBAIKAN UTAMA DI SINI ---
         if (json.data.sessions) {
+          const localSessions = await db.sessions.toArray();
+          // Pengecekan disesuaikan dengan nama kolom aslimu: session_id
+          const unsyncedSessions = localSessions.filter(s => !s.session_id || String(s.session_id).startsWith('local_'));
+          
           await db.sessions.clear();
-          await db.sessions.bulkAdd(json.data.sessions);
+          // Gunakan bulkPut yang lebih kebal error daripada bulkAdd
+          await db.sessions.bulkPut([...json.data.sessions, ...unsyncedSessions]);
         }
 
-        // BAGIAN PALING PENTING UNTUK MENGAMANKAN AVATAR
         if (json.data.therapists) {
-          // A. Tarik data lama sebelum dihapus
           const lokalDb = await db.therapists.toArray();
-          
-          // B. Suntikkan avatar lama ke data server yang baru turun
           const dataTerapisAman = json.data.therapists.map(serverData => {
-            const dataLama = lokalDb.find(lokal => lokal.therapist_id == serverData.therapist_id);
+            const dataLama = lokalDb.find(lokal => String(lokal.therapist_id).trim() === String(serverData.therapist_id).trim());
             if (dataLama && dataLama.avatar_url) {
-              serverData.avatar_url = dataLama.avatar_url; // Titip avatar lagi
+              serverData.avatar_url = dataLama.avatar_url; 
             }
             return serverData;
           });
 
-          // C. Baru kita hapus dan simpan data yang sudah ada avatarnya
           await db.therapists.clear();
-          await db.therapists.bulkAdd(dataTerapisAman);
+          await db.therapists.bulkPut(dataTerapisAman);
         }
         
         if (json.data.services) {
           await db.services.clear();
-          await db.services.bulkAdd(json.data.services);
+          await db.services.bulkPut(json.data.services);
         }
 
+        // Kalkulasi ulang setelah data server berhasil masuk ke Dexie
         await hitungData();
       }
     }
   } catch (e) {
-    console.log("Sinkronisasi gagal, pakai data lokal.");
+    console.error("Sinkronisasi gagal, pakai data lokal. Pesan error:", e);
   }
 });
 </script>

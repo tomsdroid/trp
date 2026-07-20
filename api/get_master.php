@@ -8,6 +8,8 @@ try {
     $categories = $pdo->query("SELECT * FROM categories WHERE is_active = 1")->fetchAll(PDO::FETCH_ASSOC);
     $services = $pdo->query("SELECT * FROM services")->fetchAll(PDO::FETCH_ASSOC);
     $therapists = $pdo->query("SELECT * FROM therapists WHERE deleted_at IS NULL")->fetchAll(PDO::FETCH_ASSOC);
+    
+    $sessions = $pdo->query("SELECT * FROM sessions WHERE deleted_at IS NULL")->fetchAll(PDO::FETCH_ASSOC);
 
     echo json_encode([
         "status" => "success",
@@ -16,7 +18,8 @@ try {
             "branches" => $branches,
             "areas" => $areas,
             "categories" => $categories,
-            "services" => $services
+            "services" => $services,
+            "sessions" => $sessions
         ]
     ]);
 } catch (Exception $e) {
