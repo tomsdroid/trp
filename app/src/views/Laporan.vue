@@ -86,24 +86,16 @@ import { useRouter } from 'vue-router';
 import { db } from '../db';
 import AppCredit from '../components/AppCredit.vue';
 import { 
-  ArrowLeft as ArrowLeftIcon, 
-  TrendingUp as TrendingUpIcon, 
-  TrendingDown as TrendingDownIcon, 
-  Calendar as CalendarIcon, 
-  CheckCircle as CheckCircleIcon, 
-  Clock as ClockIcon 
+  ArrowLeft as ArrowLeftIcon, TrendingUp as TrendingUpIcon, TrendingDown as TrendingDownIcon, 
+  Calendar as CalendarIcon, CheckCircle as CheckCircleIcon, Clock as ClockIcon 
 } from 'lucide-vue-next';
 
-// 1. IMPORT CHART.JS & VUE-CHARTJS
 import { Bar } from 'vue-chartjs'
 import { Chart as ChartJS, Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale } from 'chart.js'
-
-// 2. REGISTER KOMPONEN CHART.JS
 ChartJS.register(Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale)
 
 const router = useRouter();
 
-// State Variables
 const totalSesi = ref(0);
 const currentHours = ref(0);
 const prevHours = ref(0);
@@ -111,149 +103,83 @@ const currentLabel = ref('');
 const prevLabel = ref('');
 const topKategori = ref([]);
 const topLayanan = ref([]);
-
-// State untuk Chart
 const chartLoaded = ref(false);
-const chartData = ref({
-  labels: ['Bulan Lalu', 'Bulan Ini'],
-  datasets: [{ data: [0, 0] }]
-});
+const chartData = ref({ labels: ['Bulan Lalu', 'Bulan Ini'], datasets: [{ data: [0, 0] }] });
 
-// Konfigurasi Tampilan Chart
 const chartOptions = {
-  responsive: true,
-  maintainAspectRatio: false,
-  plugins: {
-    legend: { display: false }, // Sembunyikan label legend
-    tooltip: {
-      backgroundColor: '#1e293b', // slate-800
-      padding: 10,
-      cornerRadius: 8,
-      callbacks: {
-        label: (context) => ` ${context.raw} Jam Kerja`
-      }
-    }
-  },
-  scales: {
-    y: {
-      beginAtZero: true,
-      grid: { color: '#f1f5f9' }, // slate-100 (garis samar)
-      border: { display: false }
-    },
-    x: {
-      grid: { display: false }, // Hilangkan garis vertikal
-      border: { display: false }
-    }
-  }
+  responsive: true, maintainAspectRatio: false,
+  plugins: { legend: { display: false }, tooltip: { backgroundColor: '#1e293b', padding: 10, cornerRadius: 8, callbacks: { label: (c) => ` ${c.raw} Jam Kerja` } } },
+  scales: { y: { beginAtZero: true, grid: { color: '#f1f5f9' }, border: { display: false } }, x: { grid: { display: false }, border: { display: false } } }
 };
 
-// Fungsi Format Tanggal Lokal
-const formatLocal = (d) => {
-  const y = d.getFullYear();
-  const m = String(d.getMonth() + 1).padStart(2, '0');
-  const day = String(d.getDate()).padStart(2, '0');
-  return `${y}-${m}-${day}`;
-};
-
-// Fungsi Menghitung Periode Cut-Off (Tgl 19 - 18)
+const formatLocal = (d) => `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
 const getPeriodeAktif = (dateObj) => {
-  const year = dateObj.getFullYear();
-  const month = dateObj.getMonth();
-  const date = dateObj.getDate();
+  const y = dateObj.getFullYear(); const m = dateObj.getMonth(); const d = dateObj.getDate();
   let start, end;
-  
-  if (date <= 18) { 
-    start = new Date(year, month - 1, 19); 
-    end = new Date(year, month, 18); 
-  } else { 
-    start = new Date(year, month, 19); 
-    end = new Date(year, month + 1, 18); 
-  }
-  
-  return { 
-    startText: formatLocal(start), 
-    endText: formatLocal(end), 
-    label: `${start.toLocaleDateString('id-ID', {day:'numeric', month:'short'})} - ${end.toLocaleDateString('id-ID', {day:'numeric', month:'short'})}` 
-  };
+  if (d <= 18) { start = new Date(y, m - 1, 19); end = new Date(y, m, 18); } 
+  else { start = new Date(y, m, 19); end = new Date(y, m + 1, 18); }
+  return { startText: formatLocal(start), endText: formatLocal(end), label: `${start.toLocaleDateString('id-ID', {day:'numeric', month:'short'})} - ${end.toLocaleDateString('id-ID', {day:'numeric', month:'short'})}` };
 };
 
 onMounted(async () => {
   const currentId = localStorage.getItem('logged_in_id');
-  if (!currentId) { 
-    router.replace('/login'); 
-    return; 
-  }
+  if (!currentId) { router.replace('/login'); return; }
 
-  // Tentukan Tanggal Periode Bulan Ini dan Bulan Lalu
-  const now = new Date();
-  const currentPeriod = getPeriodeAktif(now);
-  
-  const pastDate = new Date(now);
-  pastDate.setMonth(pastDate.getMonth() - 1);
-  const prevPeriod = getPeriodeAktif(pastDate);
+  const hitungLaporan = async () => {
+    const now = new Date();
+    const currentPeriod = getPeriodeAktif(now);
+    const pastDate = new Date(now); pastDate.setMonth(pastDate.getMonth() - 1);
+    const prevPeriod = getPeriodeAktif(pastDate);
 
-  currentLabel.value = currentPeriod.label;
-  prevLabel.value = prevPeriod.label;
+    currentLabel.value = currentPeriod.label; prevLabel.value = prevPeriod.label;
 
-  // Ambil Data Sesi dari IndexedDB
-  const allSessions = await db.sessions.where('therapist_id').equals(currentId).toArray();
+    const allSessions = await db.sessions.where('therapist_id').equals(currentId).toArray();
+    const currSessions = allSessions.filter(s => s.date >= currentPeriod.startText && s.date <= currentPeriod.endText);
+    const prevSessions = allSessions.filter(s => s.date >= prevPeriod.startText && s.date <= prevPeriod.endText);
 
-  const currSessions = allSessions.filter(s => s.date >= currentPeriod.startText && s.date <= currentPeriod.endText);
-  const prevSessions = allSessions.filter(s => s.date >= prevPeriod.startText && s.date <= prevPeriod.endText);
+    totalSesi.value = currSessions.length;
+    const hitungMenit = (sess) => sess.reduce((acc, s) => acc + (Number(s.durasi) || 0), 0);
 
-  totalSesi.value = currSessions.length;
+    currentHours.value = Number((hitungMenit(currSessions) / 60).toFixed(1));
+    prevHours.value = Number((hitungMenit(prevSessions) / 60).toFixed(1));
 
-  // Hitung Jam Kerja
-  const hitungMenit = (sessions) => sessions.reduce((acc, s) => acc + (Number(s.durasi) || 0), 0);
+    chartData.value = {
+      labels: ['Bulan Lalu', 'Bulan Ini'],
+      datasets: [{ label: 'Jam Kerja', backgroundColor: ['#cbd5e1', '#3b82f6'], hoverBackgroundColor: ['#94a3b8', '#2563eb'], borderRadius: 6, data: [prevHours.value, currentHours.value] }]
+    };
+    chartLoaded.value = true;
 
-  const currMins = hitungMenit(currSessions);
-  const prevMins = hitungMenit(prevSessions);
+    const kategoriMap = {};
+    currSessions.forEach(s => {
+      let kname = s.kategori || 'Urutan';
+      if(kname === 'U') kname = 'Urutan'; else if(kname === 'R') kname = 'Request'; else if(kname === 'PN') kname = 'Permintaan Nama';
+      kategoriMap[kname] = (kategoriMap[kname] || 0) + 1;
+    });
+    topKategori.value = Object.keys(kategoriMap).map(k => ({ name: k, count: kategoriMap[k] })).sort((a, b) => b.count - a.count).slice(0, 3); 
 
-  currentHours.value = Number((currMins / 60).toFixed(1));
-  prevHours.value = Number((prevMins / 60).toFixed(1));
-
-  // Update Data Chart dengan Reaktivitas
-  chartData.value = {
-    labels: ['Bulan Lalu', 'Bulan Ini'],
-    datasets: [
-      {
-        label: 'Jam Kerja',
-        backgroundColor: ['#cbd5e1', '#3b82f6'], // slate-300 untuk bulan lalu, blue-500 untuk bulan ini
-        hoverBackgroundColor: ['#94a3b8', '#2563eb'],
-        borderRadius: 6, // Ujung batang membulat
-        data: [prevHours.value, currentHours.value]
-      }
-    ]
+    const layananMap = {};
+    currSessions.forEach(s => {
+      const lname = s.service_name || s.service_code || 'Layanan Lainnya';
+      layananMap[lname] = (layananMap[lname] || 0) + 1;
+    });
+    topLayanan.value = Object.keys(layananMap).map(k => ({ name: k, count: layananMap[k] })).sort((a, b) => b.count - a.count).slice(0, 5); 
   };
-  
-  // Tampilkan chart setelah data siap
-  chartLoaded.value = true;
 
-  // Kelompokkan Tipe Klien / Kategori (Bulan Ini)
-  const kategoriMap = {};
-  currSessions.forEach(s => {
-    let kname = s.kategori || 'Urutan';
-    if(kname === 'U') kname = 'Urutan';
-    else if(kname === 'R') kname = 'Request';
-    else if(kname === 'PN') kname = 'Permintaan Nama';
-    kategoriMap[kname] = (kategoriMap[kname] || 0) + 1;
-  });
-  
-  topKategori.value = Object.keys(kategoriMap)
-    .map(key => ({ name: key, count: kategoriMap[key] }))
-    .sort((a, b) => b.count - a.count)
-    .slice(0, 3); 
+  // 1. Tampil lokal
+  await hitungLaporan();
 
-  // Kelompokkan Layanan Terbanyak (Bulan Ini)
-  const layananMap = {};
-  currSessions.forEach(s => {
-    const lname = s.service_name || s.service_code || 'Layanan Lainnya';
-    layananMap[lname] = (layananMap[lname] || 0) + 1;
-  });
-  
-  topLayanan.value = Object.keys(layananMap)
-    .map(key => ({ name: key, count: layananMap[key] }))
-    .sort((a, b) => b.count - a.count)
-    .slice(0, 5); 
+  // 2. Sync Background
+  try {
+    const res = await fetch(`https://terapio.cahayaelektrik.com/api/get_sessions.php?therapist_id=${currentId}`);
+    if (res.ok) {
+      const json = await res.json();
+      if (json.status === 'success' && json.data) {
+        const allIds = await db.sessions.where('therapist_id').equals(currentId).primaryKeys();
+        await db.sessions.bulkDelete(allIds);
+        await db.sessions.bulkAdd(json.data);
+        await hitungLaporan();
+      }
+    }
+  } catch(e) {}
 });
 </script>

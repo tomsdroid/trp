@@ -38,53 +38,64 @@
     </div>
   </div>
 </template>
-
 <script setup>
 import { reactive } from 'vue';
 import { useRouter } from 'vue-router';
 import { db } from '../db';
 import { ArrowLeft as ArrowLeftIcon } from 'lucide-vue-next';
-import { showToast } from '../composables/useToast'; // Import toast
+import { showToast } from '../composables/useToast';
 
 const router = useRouter();
 const currentId = localStorage.getItem('logged_in_id');
-
 const form = reactive({ oldPin: '', newPin: '', confirmPin: '' });
 
 const simpanPinBaru = async () => {
-  // 1. Validasi panjang PIN baru
   if (form.newPin.length !== 6) {
     showToast('PIN harus 6 angka!', 'error');
     return;
   }
-
-  // 2. Validasi kecocokan PIN baru
   if (form.newPin !== form.confirmPin) {
     showToast('Konfirmasi PIN tidak cocok!', 'error');
     return;
   }
 
   try {
+    // 1. Ambil data asli dari Dexie
     const terapisData = await db.therapists.get(currentId);
     
     if (terapisData) {
-      // 3. Validasi PIN lama
       if (terapisData.pin !== form.oldPin) {
         showToast('PIN saat ini salah!', 'error');
         return;
       }
 
-      // 4. Update PIN
-      await db.therapists.update(currentId, {
-        pin: form.newPin,
-        _isDirty: true
-      });
+      // 2. Siapkan data untuk dikirim ke server
+      const payload = [{
+        ...terapisData,
+        pin: form.newPin, // Update PIN
+        updated_at: new Date().toISOString().slice(0, 19).replace('T', ' ')
+      }];
 
-      showToast('PIN berhasil diperbarui!', 'success');
-      router.back();
+      // 3. Tembak API Server
+      const response = await fetch('https://terapio.cahayaelektrik.com/api/sync_therapist.php', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+      
+      const result = await response.json();
+
+      if (result.status === 'success') {
+        // 4. Jika server oke, baru update lokal
+        await db.therapists.update(currentId, { pin: form.newPin });
+        showToast('PIN berhasil diperbarui di server & lokal!', 'success');
+        router.back();
+      } else {
+        showToast('Gagal update ke server: ' + (result.message || 'Error'), 'error');
+      }
     }
   } catch (error) {
-    showToast('Terjadi kesalahan sistem.', 'error');
+    showToast('Terjadi kesalahan jaringan.', 'error');
     console.error(error);
   }
 };

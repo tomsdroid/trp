@@ -202,7 +202,7 @@ const verifikasiPin = async () => {
       }
 
       tutupModal();
-      router.push('/dashboard'); 
+      router.push('/'); 
       
     } catch (error) {
       errorMsg.value = 'Gagal menyimpan ke HP: ' + error.message;

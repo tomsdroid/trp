@@ -89,8 +89,13 @@
             <p class="text-[10px] text-slate-500">{{ layananTerpilih.durasi }} Menit</p>
           </div>
         </div>
-        <button @click="simpanLog" class="w-full bg-teal-600 hover:bg-teal-700 active:scale-95 text-white font-bold py-3.5 rounded-xl text-sm transition-transform shadow-md flex items-center justify-center gap-2">
-          <SaveIcon :size="18" /> Simpan Log Sekarang
+                <button @click="simpanLog" :disabled="isSubmitting" class="w-full bg-teal-600 hover:bg-teal-700 disabled:bg-teal-400 active:scale-95 text-white font-bold py-3.5 rounded-xl text-sm transition-transform shadow-md flex items-center justify-center gap-2">
+          <span v-if="isSubmitting" class="animate-pulse flex items-center gap-2">
+            Menyimpan ke Server...
+          </span>
+          <span v-else class="flex items-center gap-2">
+            <SaveIcon :size="18" /> Simpan Log Sekarang
+          </span>
         </button>
       </div>
     </Transition>
@@ -158,6 +163,7 @@ const showModal = ref(false);
 const kategoriTerpilih = ref('U');
 const searchQuery = ref('');
 const layananTerpilih = ref(null);
+const isSubmitting = ref(false);
 
 // Fungsi untuk sinkronisasi master data dari server ke lokal
 const syncMasterData = async () => {
@@ -241,36 +247,66 @@ const estimasiKomisi = computed(() => {
 
 const simpanLog = async () => {
   if (!layananTerpilih.value) return;
+  
   const currentId = localStorage.getItem('logged_in_id');
+  if (!currentId) {
+    showToast('Sesi tidak valid, silakan login ulang', 'error');
+    return;
+  }
+
+  isSubmitting.value = true;
   
   try {
     const now = new Date();
     const mysqlTimestamp = now.toISOString().slice(0, 19).replace('T', ' ');
     const currentDate = mysqlTimestamp.split(' ')[0];
+    
+    // Tetap buat session_id unik
     const newSessionId = 'SES' + Date.now() + Math.random().toString(36).substr(2, 4).toUpperCase();
+    
+    // SUSUN PAYLOAD SESUAI PERMINTAAN PHP
+    const payload = {
+      therapist_id: currentId, // Taruh ID di luar sesuai request PHP
+      sessions: [ // Masukkan data sesi ke dalam array 'sessions'
+        {
+          session_id: newSessionId,
+          service_code: layananTerpilih.value.code,
+          service_name: layananTerpilih.value.produk,
+          durasi: layananTerpilih.value.durasi,
+          komisi: estimasiKomisi.value,
+          date: currentDate,
+          timestamp: mysqlTimestamp,
+          kategori: kategoriTerpilih.value,
+          branch: lokasi.branch,
+          area: lokasi.area
+        }
+      ]
+    };
 
-    await db.sessions.add({
-      session_id: newSessionId,
-      therapist_id: currentId,
-      service_code: layananTerpilih.value.code,
-      service_name: layananTerpilih.value.produk,
-      durasi: layananTerpilih.value.durasi,
-      komisi: estimasiKomisi.value,
-      date: currentDate,
-      timestamp: mysqlTimestamp,
-      kategori: kategoriTerpilih.value,
-      branch: lokasi.branch,
-      area: lokasi.area,
-      is_synced: 0,
-      _isDirty: true
+    // Tembak langsung ke sync_sessions.php
+    const response = await fetch('https://terapio.cahayaelektrik.com/api/sync_sessions.php', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
     });
 
-    showToast('Berhasil! Log tersimpan lokal.', 'success');
-    setTimeout(() => router.push('/dashboard'), 1000);
+    const result = await response.json();
+
+    if (result.status === 'success') {
+      showToast('Berhasil! Log langsung tersimpan ke server.', 'success');
+      setTimeout(() => router.push('/dashboard'), 1000);
+    } else {
+      showToast(result.message || 'Gagal menyimpan data ke server', 'error');
+    }
+    
   } catch (error) {
-    showToast('Gagal menyimpan sesi!', 'error');
+    console.error('API Error:', error);
+    showToast('Koneksi terputus. Pastikan internet Anda stabil!', 'error');
+  } finally {
+    isSubmitting.value = false;
   }
 };
+
 </script>
 
 <style scoped>

@@ -7,7 +7,7 @@
       <!-- Avatar User -->
       <div v-if="terapisTersimpan" class="mb-4">
         <div class="w-16 h-16 mx-auto rounded-full bg-teal-100 flex items-center justify-center overflow-hidden border-2 border-teal-500 shadow-sm">
-          <img v-if="terapisTersimpan.avatar_url || terapisTersimpan.avatarUrl" :src="terapisTersimpan.avatar_url || terapisTersimpan.avatarUrl" class="w-full h-full object-cover">
+          <img v-if="terapisTersimpan.avatar_url || terapisTersimpan.avatarUrl" :src="formatAvatar(terapisTersimpan.avatar_url || terapisTersimpan.avatarUrl)" class="w-full h-full object-cover">
           <UserIcon v-else :size="32" class="text-teal-600" />
         </div>
         <h2 class="text-lg font-bold text-slate-800 mt-2">{{ terapisTersimpan.fullname }}</h2>
@@ -93,6 +93,15 @@ const verifyPhone = ref('');
 const newPin = ref('');
 const resetError = ref('');
 const showRoleModal = ref(false);
+
+// FUNGSI UNTUK MENCEGAH URL LOKAL TERTAMBAH LINK SERVER
+const formatAvatar = (rawAvatar) => {
+  if (!rawAvatar) return null;
+  if (rawAvatar.startsWith('http') || rawAvatar.startsWith('data:image')) {
+    return rawAvatar;
+  }
+  return `https://terapio.cahayaelektrik.com/${rawAvatar.replace(/^\//, '')}`;
+};
 
 onMounted(async () => {
   const loggedInId = localStorage.getItem('logged_in_id');

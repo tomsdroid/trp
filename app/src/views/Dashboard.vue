@@ -20,8 +20,11 @@
       </div>
     </div>
 
+    <!-- WIDGET STATISTIK -->
     <div class="px-4 -mt-8 relative z-10 mb-6">
-      <div class="bg-white rounded-2xl p-4 shadow-lg border border-slate-100 grid grid-cols-2 divide-x divide-slate-100">
+      
+      <!-- WIDGET KHUSUS TERAPIS -->
+      <div v-if="activeRole !== 'admin'" class="bg-white rounded-2xl p-4 shadow-lg border border-slate-100 grid grid-cols-2 divide-x divide-slate-100">
         <div class="pr-3 flex flex-col justify-center">
           <p class="text-[9px] font-bold text-slate-400 uppercase tracking-wider mb-1">Sesi Hari Ini</p>
           <div class="flex items-center gap-2">
@@ -37,6 +40,25 @@
           <p class="text-[8px] text-slate-400 mt-0.5">{{ labelPeriode }}</p>
         </div>
       </div>
+
+      <!-- WIDGET KHUSUS ADMIN -->
+      <div v-else class="bg-white rounded-2xl p-4 shadow-lg border border-slate-100 grid grid-cols-2 divide-x divide-slate-100">
+        <div class="pr-3 flex flex-col justify-center">
+          <p class="text-[9px] font-bold text-slate-400 uppercase tracking-wider mb-1">Data Terapis</p>
+          <div class="flex items-center gap-2">
+            <p class="text-3xl font-extrabold text-orange-500 leading-none">{{ jumlahTerapis }}</p>
+            <span class="text-[10px] text-slate-400 font-medium leading-tight">Orang<br>Terdaftar</span>
+          </div>
+        </div>
+        <div class="pl-4 flex flex-col justify-center">
+          <p class="text-[9px] font-bold text-slate-400 uppercase tracking-wider mb-1">Layanan Tersedia</p>
+          <div class="flex items-center gap-2 mt-1">
+            <p class="text-2xl font-extrabold text-blue-600 truncate">{{ jumlahLayanan }}</p>
+            <span class="text-[10px] text-slate-400 font-medium leading-tight">Jenis<br>Treatment</span>
+          </div>
+        </div>
+      </div>
+
     </div>
 
     <div class="p-4 bg-white mx-4 rounded-2xl shadow-sm border border-slate-100 mb-6">
@@ -135,10 +157,24 @@ import {
 const router = useRouter();
 const terapisName = ref('Memuat...');
 const avatarUrl = ref(null);
+const activeRole = ref(localStorage.getItem('active_role') || 'terapis');
+
+// State Terapis
 const sesiHariIni = ref(0);
 const totalKomisi = ref(0);
 const labelPeriode = ref('');
-const activeRole = ref(localStorage.getItem('active_role') || 'terapis');
+
+// State Admin
+const jumlahTerapis = ref(0);
+const jumlahLayanan = ref(0);
+
+// Gunakan waktu lokal (bukan UTC) untuk mendapatkan format YYYY-MM-DD
+const getLocalDateString = (dateObj) => {
+  const y = dateObj.getFullYear();
+  const m = String(dateObj.getMonth() + 1).padStart(2, '0');
+  const d = String(dateObj.getDate()).padStart(2, '0');
+  return `${y}-${m}-${d}`;
+};
 
 const getPeriodeAktif = (dateObj) => {
   const year = dateObj.getFullYear();
@@ -147,27 +183,93 @@ const getPeriodeAktif = (dateObj) => {
   let start, end;
   if (date <= 18) { start = new Date(year, month - 1, 19); end = new Date(year, month, 18, 23, 59, 59); }
   else { start = new Date(year, month, 19); end = new Date(year, month + 1, 18, 23, 59, 59); }
-  return { startText: start.toISOString().split('T')[0], endText: end.toISOString().split('T')[0], label: `${start.toLocaleDateString('id-ID', {day:'numeric', month:'short'})} - ${end.toLocaleDateString('id-ID', {day:'numeric', month:'short'})}` };
+  
+  return { 
+    startText: getLocalDateString(start), 
+    endText: getLocalDateString(end), 
+    label: `${start.toLocaleDateString('id-ID', {day:'numeric', month:'short'})} - ${end.toLocaleDateString('id-ID', {day:'numeric', month:'short'})}` 
+  };
 };
 
 onMounted(async () => {
   const currentId = localStorage.getItem('logged_in_id');
   if (!currentId) { router.replace('/login'); return; }
   
-  const data = await db.therapists.get(currentId);
-  if (data) {
-    terapisName.value = data.fullname || data.shortname || 'Terapis';
-    avatarUrl.value = data.avatar_url || data.avatarUrl || null;
+  // 1. CARA BACA AVATAR ANTI GAGAL (Toleransi String/Number)
+  const semuaTerapisLokal = await db.therapists.toArray();
+  const dataUser = semuaTerapisLokal.find(t => t.therapist_id == currentId);
+
+  if (dataUser) {
+    terapisName.value = dataUser.fullname || dataUser.shortname || 'Terapis';
+    // Karena kita sudah full lokal, cukup panggil avatar_url
+    if (dataUser.avatar_url) {
+      avatarUrl.value = dataUser.avatar_url;
+    }
   }
   
-  const now = new Date();
-  const dateStr = now.toISOString().split('T')[0];
-  const allSessions = await db.sessions.where('therapist_id').equals(currentId).toArray();
-  sesiHariIni.value = allSessions.filter(s => s.date === dateStr).length;
-  
-  const periode = getPeriodeAktif(now);
-  labelPeriode.value = periode.label;
-  const sesiPeriode = allSessions.filter(s => s.date >= periode.startText && s.date <= periode.endText);
-  totalKomisi.value = sesiPeriode.reduce((acc, s) => acc + (s.komisi || 0), 0);
+  // Fungsi Hitung Dashboard
+  const hitungData = async () => {
+    if (activeRole.value === 'admin') {
+      jumlahTerapis.value = await db.therapists.count();
+      jumlahLayanan.value = await db.services.count();
+    } else {
+      const now = new Date();
+      const dateStr = getLocalDateString(now);
+      const allSessions = await db.sessions.where('therapist_id').equals(currentId).toArray();
+      
+      sesiHariIni.value = allSessions.filter(s => s.date === dateStr).length;
+      
+      const periode = getPeriodeAktif(now);
+      labelPeriode.value = periode.label;
+      
+      const sesiPeriode = allSessions.filter(s => s.date >= periode.startText && s.date <= periode.endText);
+      totalKomisi.value = sesiPeriode.reduce((acc, s) => acc + (s.komisi || 0), 0);
+    }
+  };
+
+  await hitungData();
+
+  // 2. SINKRONISASI SERVER YANG "MENGUNCI" AVATAR LOKAL
+  try {
+    const res = await fetch('https://terapio.cahayaelektrik.com/api/get_master.php');
+    if (res.ok) {
+      const json = await res.json();
+      if (json.status === 'success' && json.data) {
+        
+        if (json.data.sessions) {
+          await db.sessions.clear();
+          await db.sessions.bulkAdd(json.data.sessions);
+        }
+
+        // BAGIAN PALING PENTING UNTUK MENGAMANKAN AVATAR
+        if (json.data.therapists) {
+          // A. Tarik data lama sebelum dihapus
+          const lokalDb = await db.therapists.toArray();
+          
+          // B. Suntikkan avatar lama ke data server yang baru turun
+          const dataTerapisAman = json.data.therapists.map(serverData => {
+            const dataLama = lokalDb.find(lokal => lokal.therapist_id == serverData.therapist_id);
+            if (dataLama && dataLama.avatar_url) {
+              serverData.avatar_url = dataLama.avatar_url; // Titip avatar lagi
+            }
+            return serverData;
+          });
+
+          // C. Baru kita hapus dan simpan data yang sudah ada avatarnya
+          await db.therapists.clear();
+          await db.therapists.bulkAdd(dataTerapisAman);
+        }
+        
+        if (json.data.services) {
+          await db.services.clear();
+          await db.services.bulkAdd(json.data.services);
+        }
+
+        await hitungData();
+      }
+    }
+  } catch (e) {
+    console.log("Sinkronisasi gagal, pakai data lokal.");
+  }
 });
 </script>
